@@ -3,7 +3,7 @@
       <script>
          AUTOBAHN_DEBUG = true;
       </script>
-<script src="autobahn.js"></script>
+<script src="js/autobahn.js"></script>
 <script>
 
 
@@ -11,7 +11,7 @@
 
 var myEvent = {eventname: "myEvent", eventDetails: ["something happened", "today"]};
 
-    var conn = new ab.Session('wss://arduino.os.cs.teiath.gr',
+    var conn = new ab.Session('wss://your server',
         function() {
             conn.subscribe('kittensCategory', function(topic, data) {
                 // This is where you would add the new article to the DOM (beyond the scope of this tutorial)

@@ -3,7 +3,7 @@
       <script>
          AUTOBAHN_DEBUG = true;
       </script>
-<script src="autobahn.js"></script>
+<script src="js/autobahn.js"></script>
 <script>
 
       console.log("Ok, Autobahn loaded", autobahn.version);
@@ -15,7 +15,7 @@
 
 
 
-var conn = new WebSocket('wss://arduino.os.cs.teiath.gr');
+var conn = new WebSocket('wss://your server');
 conn.onopen = function(e) {
     console.log("Connection established!");
 };
