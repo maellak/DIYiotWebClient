@@ -1,9 +1,9 @@
 function diy_tools () {
-        var diy__hostname = "arduino.os.cs.teiath.gr";
+        var diy__hostname = "your url";
         this.https_url = "https://"+diy__hostname;
         this.wss_url = "wss://"+diy__hostname;
-        this.client_id = "CLIENT_ID11";
-        this.client_secret = "arduino#c%cf!q";
+        this.client_id = "username";
+        this.client_secret = "password";
         this.device = "";
 }
 // ***GIT*** 
