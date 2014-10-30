@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,20 +20,75 @@
     <!-- Custom Fonts -->
     <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+<script>
+(function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
+function f(){
+
+// ***************************************************************
+// *********************** $LAB stuff ****************************
+// ***************************************************************
+$LAB.script("js/jquery-2.1.1.js").wait() 
+        .script("js/autobahn.js").wait() 
+    	.script("js/diy_js.js").wait() 
+	.script("js/bootstrap.min.js").wait()
+
+        .wait(function(){
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+         	AUTOBAHN_DEBUG = true;
+ 		ab.debug(true);
+ 		var diy_o =  new diy_tools();
+        	$(function(){   
+			/* 
+			 * ******************************************
+			 * get token and connect to  wss 
+			 * connect is using fro data read from device 
+			 * ******************************************
+			*/ 
+			var promiseToken = diy_o.getToken();
+			promiseToken.success(function (data) {
+				diy_o.access_token = data.access_token;
+				var promiseDevices = diy_o.getDevices();
+				promiseDevices.success(function (devices) {
+					$.each(devices.result.dev, function(i, item) {
+						$('<div id="diy_'+item.device+'" class="diy_devices">'+item.device+'</div>').appendTo('#devices');
+						//console.log('Devices:"' + item.device);	
+					});
+				});
+			});
+			$(document).on('click', '.diy_devices', function() {
+				var id = $(this).attr('id');
+				var device=id.substr(4)
+				//console.log('Devices:"' + device);	
+				promiseToken.success(function (data) {
+					diy_o.device = device;
+					//diy_o.device = "kittensCategory";
+					diy_o.access_token = data.access_token;
+					diy_o.wss_connect();
+				});
+			});
+  		});
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+        });
+// ***************************************************************
+// *********************** $LAB stuff  ***************************
+// ***************************************************************
+
+}
+H(function(){if("item"in c){if(!c[0]){H(arguments.callee,25);return}c=c[0]}var a=b.createElement("script"),e=false;a.onload=a[E]=function(){if((a[D]&&a[D]!=="complete"&&a[D]!=="loaded")||e){return false}a.onload=a[E]=null;e=true;f()};
+a.src="js/LAB.js";
+c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=function(){b.removeEventListener(F,d,false);b[D]="complete"},false)}})(this,document);
+
+</script>
 
 </head>
-
 <body>
+  <div id="wrapper">
 
-    <div id="wrapper">
 
-       
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -49,7 +101,7 @@
                 </button>
                 <a class="navbar-brand" href="index.html">Arduino@net</a>
             </div>
-            
+
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
             <div class="collapse navbar-collapse navbar-ex1-collapse">
                 <ul class="nav navbar-nav side-nav">
@@ -71,22 +123,22 @@
                             <li>
                                 <a href="dropdown_item_2.html">Example Dropdown Item 2</a>
                             </li>
-							<li>
+                                                        <li>
                                 <a href="blank-page.html">Blank page</a>
                             </li>
                             <li>
                                 <a href="tables.html">Tables</a>
                             </li>
-							<li>
+                                                        <li>
                                 <a href="forms.html">Forms</a>
                             </li>
-							<li>
+                                                        <li>
                                 <a href="charts.html">Charts</a>
                             </li>
-							<li>
+                                                        <li>
                                 <a href="bootstrap-grid.html">Bootstrap grid</a>
                             </li>
-							<li>
+                                                        <li>
                                 <a href="bootstrap-elements.html">Bootstrap elements</a>
                             </li>
                         </ul>
@@ -106,7 +158,7 @@
                         <h1 class="page-header">
                             Blank Page
                             <small>Subheading</small>
-							 <!-- breadcrumb -->
+                                                         <!-- breadcrumb -->
                         </h1>
                     </div>
                 </div>
@@ -121,12 +173,8 @@
     </div>
     <!-- /#wrapper -->
 
-    <!-- jQuery Version 1.11.0 -->
-    <script src="js/jquery-1.11.0.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-</body>
-
+<div id="devices" class="devices">
+</div>
+</body?
 </html>
