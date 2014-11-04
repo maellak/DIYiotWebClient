@@ -1,10 +1,13 @@
 function diy_tools () {
+
         var diy__hostname = "your server";
         this.https_url = "https://"+diy__hostname;
         this.wss_url = "wss://"+diy__hostname;
         this.client_id = "username";
         this.client_secret = "password";
         this.device = "";
+
+
 }
 // ***GIT*** 
 // ***GitGit*** 
@@ -68,6 +71,7 @@ diy_tools.prototype.wss_connect = function()  {
 			devicestr = JSON.stringify(device);
 			conn.subscribe(subject.device, function(topic, data) {
 				console.log('device data:"' + topic + '" : ' + data.a+data.b+data.c);
+				document.getElementById('dataDev').innerHTML += 'device data:"' + topic + '" : ' + data.a+" "+data.b+" "+data.c+"<br>";
 			});
 		},
 		function() {

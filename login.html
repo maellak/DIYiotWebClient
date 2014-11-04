@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,13 +30,13 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+<script src="js/diy_js.js"></script>
 </head>
 
 <body>
 
-    <div id="wrapper">
 
-
+      <div id="wrapper">  
         <!-- Navigation -->
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -60,11 +62,11 @@
                      <li>
                         <a href="example-page2.html">Example page 2</a>
                     </li>
-					<li>
+					 <li>
                         <a href="register.html">Register</a>
                     </li>
 					<li>
-                        <a href="login.html">Login</a>
+                        <a href="login.html" class="active">Login</a>
                     </li>
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#demo">Dropdown<i class="fa fa-fw fa-caret-down"></i></a>
@@ -99,36 +101,43 @@
             </div>
             <!-- /.navbar-collapse -->
         </nav>
-
-        <div id="page-wrapper">
+    <div id="page-wrapper">
 
             <div class="container-fluid">
-
-                <!-- Page Heading -->
+			 <!-- Page Heading -->
                 <div class="row">
                     <div class="col-lg-12">
                         <h1 class="page-header">
-                            Example
+                            Login
+
                         </h1>
-                        <!-- breadcrumb -->
                     </div>
                 </div>
                 <!-- /.row -->
 
-         Example
-
-        </div>
-        <!-- /#page-wrapper -->
-
+            </div>
+            <!-- /.container-fluid -->
+  <form class="form-horizontal" role="form" method="post" action="example-websocket.html">
+  <div class="form-group">
+   <label for="client_id" class="col-sm-2 control-label">Username</label>
+   <div class="col-sm-10">
+		<input type="text" class="form-control" name="client_id" id="client_id" placeholder="Username" required>
     </div>
-    <!-- /#wrapper -->
-
-    <!-- jQuery Version 1.11.0 -->
-    <script src="js/jquery-1.11.0.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
-
-</body>
-
+  </div>
+  <div class="form-group">
+    <label for="client_secret" class="col-sm-2 control-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" name="client_secret" id="client_secret" placeholder="Password" required>
+    </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default" onclick='diy_tools()'>Log in</button>
+    </div>
+  </div>
+</form>
+</div>
+   </div>
+   <div id="devices" class="devices">
+</div>
+ </body>
 </html>
