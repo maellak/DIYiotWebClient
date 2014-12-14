@@ -1,10 +1,10 @@
 function diy_tools () {
 
-        var diy__hostname = "your server";
+        var diy__hostname = "arduino.os.cs.teiath.gr";
         this.https_url = "https://"+diy__hostname;
         this.wss_url = "wss://"+diy__hostname;
-        this.client_id = "username";
-        this.client_secret = "password";
+        this.client_id = "user7";
+        this.client_secret = "Uuser7!";
         this.device = "";
 
 
@@ -70,8 +70,8 @@ diy_tools.prototype.wss_connect = function()  {
 			device.name = subject.device;
 			devicestr = JSON.stringify(device);
 			conn.subscribe(subject.device, function(topic, data) {
-				console.log('device data:"' + topic + '" : ' + data.a+data.b+data.c);
-				document.getElementById('dataDev').innerHTML += 'device data:"' + topic + '" : ' + data.a+" "+data.b+" "+data.c+"<br>";
+				//console.log('device data:"' + topic + '" : ' + data);
+				$( "#dataDev" ).append( data.data + "<br>" );
 			});
 		},
 		function() {

@@ -1,30 +1,55 @@
 <html>
 <head>
-  <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- sb-admin CSS -->
-    <link href="css/sb-admin.css" rel="stylesheet">
-
-    <!-- Custom CSS -->
-    <link href="css/custom.css" rel="stylesheet">
-
-    <!-- Custom Fonts -->
-    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="js/plugins/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.css">
+<link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.theme.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/doc/docs.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/hint/show-hint.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/display/fullscreen.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/lint/lint.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/dialog/dialog.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/search/matchesonscrollbar.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/theme/xq-light.css">
 <script>
-
 (function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
 function f(){
 
+	 
 // ***************************************************************
 // *********************** $LAB stuff ****************************
 // ***************************************************************
 $LAB.script("js/jquery-2.1.1.js").wait() 
         .script("js/autobahn.js").wait() 
     	.script("js/diy_js.js").wait() 
-    	.script("js/plugins/CodeMirror/lib/codemirror.js").wait() 
-    	.script("js/plugins/CodeMirror/mode/clike/clike.js").wait() 
+    	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
+	.script("js/plugins/CodeMirror/lib/codemirror.js").wait() 
+	.script("js/plugins/CodeMirror/mode/clike/clike.js").wait() 
+	.script("js/plugins/CodeMirror/addon/edit/matchbrackets.js").wait() 
+	.script("js/plugins/CodeMirror/addon/comment/comment.js").wait() 
+	.script("js/plugins/CodeMirror/addon/search/search.js").wait() 
+	.script("js/plugins/CodeMirror/addon/search/searchcursor.js").wait() 
+	.script("js/plugins/CodeMirror/addon/dialog/dialog.js").wait() 
+	.script("js/plugins/CodeMirror/addon/scroll/annotatescrollbar.js").wait() 
+	.script("js/plugins/CodeMirror/addon/search/matchesonscrollbar.js").wait() 
+	.script("js/plugins/CodeMirror/addon/display/fullscreen.js").wait() 
+	.script("js/plugins/CodeMirror/addon/hint/anyword-hint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/hint/show-hint.js").wait() 
+
+	.script("js/plugins/CodeMirror/addon/lint/lint.js").wait() 
+	.script("js/plugins/CodeMirror/mode/css/css.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/javascript-lint.js").wait() 
+	.script("js/plugins/CodeMirror/mode/javascript/javascript.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/json-lint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/css-lint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/selection/active-line.js").wait() 
+	//.script("http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/jshint.js").wait() 
+	//.script("https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/jsonlint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/csslint.js").wait() 
+	//.script("https://rawgithub.com/stubbornella/csslint/master/release/csslint.js").wait() 
+
         .wait(function(){
                 // ***************************************************************
                 // *********************** scripts ok  ***************************
@@ -32,14 +57,81 @@ $LAB.script("js/jquery-2.1.1.js").wait()
          	AUTOBAHN_DEBUG = true;
  		ab.debug(true);
  		var diy_o =  new diy_tools();
+					//name: "text/x-csrc", 
         	$(function(){   
-			/* 
-			 * ******************************************
-			 * get token and connect to  wss 
-			 * connect is using fro data read from device 
-			 * ******************************************
-			*/ 
-			var myCodeMirror = CodeMirror.fromTextArea(myTextArea);
+			var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+				mode: { 
+					name: "javascript", 
+					globalVars: true
+				},
+				lint: true,
+				lineNumbers: true,
+				theme: "default",
+				tabMode: "indent",
+				gutters: ["CodeMirror-lint-markers"],
+				matchBrackets: true,
+				onBlur: function(){
+					editor.save();
+				},
+				onChange: function(){
+					$("#changeimg").show();
+				}, 
+				extraKeys: {
+					'Cmd-/' : 'toggleComment',
+					'Ctrl-/' : 'toggleComment',
+					"Ctrl-Space": "autocomplete",
+				        "F11": function(cm) {
+				        	cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+				        },
+					"Esc": function(cm) {
+						if (cm.getOption("fullScreen")) 
+							cm.setOption("fullScreen", false);
+					}
+				},
+				path: 'js/', 
+				searchMode: 'inline',
+				onCursorActivity: function () {
+					editor.setLineClass(hlLine, null);
+					hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
+				}
+			});
+			$(document).on('click', '#save', function() {
+				console.log(editor.getValue());
+			});
+			$(document).on('click', '#load', function() {
+				editor.setValue(data);
+			});
+			$(document).on('click', '#add_file', function() {
+				 dialog.dialog( "open" );
+			 });
+			  var dialog = $( "#dialog" ).dialog({
+				  autoOpen: false,
+				  modal: true,
+				  buttons: {
+					  Add: function() {
+						  addTab();
+						  $( this ).dialog( "close" );
+					  },
+					  Cancel: function() {
+						  $( this ).dialog( "close" );
+					  }
+				  },
+				  close: function() {
+					  form[ 0 ].reset();
+				  }
+			  });
+			var data='var widgets = [] \n function updateHints() { \n editor.operation(function(){ \n for (var i = 0; i < widgets.length; ++i) \n editor.removeLineWidget(widgets[i]); \n widgets.length = 0; \n \n JSHINT(editor.getValue()); \n for (var i = 0; i < JSHINT.errors.length; ++i) {\n var err = JSHINT.errors[i]; \n if (!err) continue; \n var msg = document.createElement("div"); \n var icon = msg.appendChild(document.createElement("span")); \n icon.innerHTML = "!!"; \n icon.className = "lint-error-icon"; \n msg.appendChild(document.createTextNode(err.reason)); \n msg.className = "lint-error"; \n widgets.push(editor.addLineWidget(err.line - 1, msg, {coverGutter: false, noHScroll: true})); \n } \n }); \n var info = editor.getScrollInfo(); \n var after = editor.charCoords({line: editor.getCursor().line + 1, ch: 0}, "local").top; \n if (info.top + info.clientHeight < after) \n editor.scrollTo(null, after - info.clientHeight + 3); \n } \n ';
+
+
+			$( "#tabs" ).tabs();
+
+
+
+
+
+
+  		});
+
                 // ***************************************************************
                 // *********************** scripts ok  ***************************
                 // ***************************************************************
@@ -58,91 +150,34 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
 
 </head>
 <body>
-<div id="wrapper">
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">Arduino@net</a>
-            </div>
-            
-            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="example-page1.html">Example page 1</a>
-                    </li>
-                     <li>
-                        <a href="example-page2.html">Example page 2</a>
-                    </li>
-					<li>
-                        <a href="register.html">Register</a>
-                    </li>
-					<li>
-                        <a href="login.html">Login</a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#demo">Dropdown<i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="demo" class="collapse">
-                            <li class="active">
-                                <a href="dropdown_item_1.html">Example Dropdown Item 1</a>
-                            </li>
-                            <li>
-                                <a href="dropdown_item_2.html">Example Dropdown Item 2</a>
-                            </li>
-							<li>
-                                <a href="blank-page.html">Blank page</a>
-                            </li>
-                            <li>
-                                <a href="tables.html">Tables</a>
-                            </li>
-							<li>
-                                <a href="forms.html">Forms</a>
-                            </li>
-							<li>
-                                <a href="charts.html">Charts</a>
-                            </li>
-							<li>
-                                <a href="bootstrap-grid.html">Bootstrap grid</a>
-                            </li>
-							<li>
-                                <a href="bootstrap-elements.html">Bootstrap elements</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-<div id="page-wrapper">
-
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Devices
-                        </h1>
-                       
-                  </div>
-               </div>
-               <div id="devices" class="devices">
-               </div>
-               <div id="dataDev" class="dataDev">
-               </div>
-		  </div>
-</div>
-</div>
-</body?
+	<div id="devices" class="devices">
+	</div>
+	<div id="myTextAreadiv" class="myTextAreadiv">
+		<p>The keybindings are:</p>
+		<dl>
+			<dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
+			<dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
+			<dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
+			<dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
+			<dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
+			Press F11 when cursor is in the editor to toggle full screen editing.<br> 
+			Esc can also be used to exit full screen editi
+			<div id="save">save</div>
+			<div id="load">save</div>
+		</dl>
+	</div>	
+	<button id="add_file">Add File</button>
+	<div id="tabs">
+		<ul>
+			<li>Tab 1</li>
+			<li>Tab 2</li>
+		</ul>
+		<div>
+			<textarea id="code" cols="150" rows="50"></textarea>
+		</div>
+	</div>
+	<div id="dataDev" class="dataDev">
+	</div>
+	<div id="dialog" title="Tab data"></div>
+</body>
 </html>
