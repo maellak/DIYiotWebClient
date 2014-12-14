@@ -3,8 +3,8 @@ function diy_tools () {
         var diy__hostname = "arduino.os.cs.teiath.gr";
         this.https_url = "https://"+diy__hostname;
         this.wss_url = "wss://"+diy__hostname;
-        this.client_id = "user7";
-        this.client_secret = "Uuser7!";
+        this.client_id = "user";
+        this.client_secret = "userpasswordd";
         this.device = "";
 
 
