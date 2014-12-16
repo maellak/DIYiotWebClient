@@ -11,6 +11,52 @@
 <link rel="stylesheet" href="js/plugins/CodeMirror/addon/dialog/dialog.css">
 <link rel="stylesheet" href="js/plugins/CodeMirror/addon/search/matchesonscrollbar.css">
 <link rel="stylesheet" href="js/plugins/CodeMirror/theme/xq-light.css">
+ <style>
+	 .ui-tooltip, .arrow:after {
+	 background: black;
+	 border: 2px solid white;
+	 }
+	 .ui-tooltip {
+	 padding: 10px 20px;
+	 color: white;
+	 border-radius: 20px;
+	 font: bold 11px "Helvetica Neue", Sans-Serif;
+	 text-transform: uppercase;
+	 box-shadow: 0 0 7px black;
+	 }
+	 .arrow {
+	 width: 70px;
+	 height: 16px;
+	 overflow: hidden;
+	 position: absolute;
+	 left: 50%;
+	 margin-left: -35px;
+	 bottom: -16px;
+	 }
+	 .arrow.top {
+	 top: -16px;
+	 bottom: auto;
+	 }
+	 .arrow.left {
+	 left: 20%;
+	 }
+	 .arrow:after {
+	 content: "";
+	 position: absolute;
+	 left: 20px;
+	 top: -20px;
+	 width: 25px;
+	 height: 25px;
+	 box-shadow: 6px 5px 9px -9px black;
+	 -webkit-transform: rotate(45deg);
+	 -ms-transform: rotate(45deg);
+	 transform: rotate(45deg);
+	 }
+	 .arrow.top:after {
+	 bottom: -20px;
+	 top: auto;
+	 }
+ </style>
 <script>
 (function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
 function f(){
@@ -23,30 +69,30 @@ $LAB.script("js/jquery-2.1.1.js").wait()
         .script("js/autobahn.js").wait() 
     	.script("js/diy_js.js").wait() 
     	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
-	.script("js/plugins/CodeMirror/lib/codemirror.js").wait() 
-	.script("js/plugins/CodeMirror/mode/clike/clike.js").wait() 
-	.script("js/plugins/CodeMirror/addon/edit/matchbrackets.js").wait() 
-	.script("js/plugins/CodeMirror/addon/comment/comment.js").wait() 
-	.script("js/plugins/CodeMirror/addon/search/search.js").wait() 
-	.script("js/plugins/CodeMirror/addon/search/searchcursor.js").wait() 
-	.script("js/plugins/CodeMirror/addon/dialog/dialog.js").wait() 
-	.script("js/plugins/CodeMirror/addon/scroll/annotatescrollbar.js").wait() 
-	.script("js/plugins/CodeMirror/addon/search/matchesonscrollbar.js").wait() 
-	.script("js/plugins/CodeMirror/addon/display/fullscreen.js").wait() 
-	.script("js/plugins/CodeMirror/addon/hint/anyword-hint.js").wait() 
-	.script("js/plugins/CodeMirror/addon/hint/show-hint.js") 
+	.script("js/plugins/CodeMirror/lib/codemirror.js").wait()
+	.script("js/plugins/CodeMirror/mode/clike/clike.js").wait()
+	.script("js/plugins/CodeMirror/addon/edit/matchbrackets.js").wait()
+	.script("js/plugins/CodeMirror/addon/comment/comment.js").wait()
+	.script("js/plugins/CodeMirror/addon/search/search.js").wait()
+	.script("js/plugins/CodeMirror/addon/search/searchcursor.js").wait()
+	.script("js/plugins/CodeMirror/addon/dialog/dialog.js").wait()
+	.script("js/plugins/CodeMirror/addon/scroll/annotatescrollbar.js").wait()
+	.script("js/plugins/CodeMirror/addon/search/matchesonscrollbar.js").wait()
+	.script("js/plugins/CodeMirror/addon/display/fullscreen.js").wait()
+	.script("js/plugins/CodeMirror/addon/hint/anyword-hint.js").wait()
+	.script("js/plugins/CodeMirror/addon/hint/show-hint.js").wait()
 
-	.script("js/plugins/CodeMirror/addon/lint/lint.js")
-	.script("js/plugins/CodeMirror/mode/css/css.js")
-	.script("js/plugins/CodeMirror/addon/lint/javascript-lint.js")
-	.script("js/plugins/CodeMirror/mode/javascript/javascript.js")
-	.script("js/plugins/CodeMirror/addon/lint/json-lint.js") 
-	.script("js/plugins/CodeMirror/addon/lint/css-lint.js")
-	.script("js/plugins/CodeMirror/addon/selection/active-line.js")
+	.script("js/plugins/CodeMirror/addon/lint/lint.js").wait()
+	.script("js/plugins/CodeMirror/mode/css/css.js").wait()
+	.script("js/plugins/CodeMirror/addon/lint/javascript-lint.js").wait()
+	.script("js/plugins/CodeMirror/mode/javascript/javascript.js").wait()
+	.script("js/plugins/CodeMirror/addon/lint/json-lint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/css-lint.js").wait()
+	.script("js/plugins/CodeMirror/addon/selection/active-line.js").wait()
 	//.script("http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js").wait() 
-	.script("js/plugins/CodeMirror/addon/lint/jshint.js") 
+	.script("js/plugins/CodeMirror/addon/lint/jshint.js").wait()
 	//.script("https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js").wait() 
-	.script("js/plugins/CodeMirror/addon/lint/jsonlint.js")
+	.script("js/plugins/CodeMirror/addon/lint/jsonlint.js").wait()
 	.script("js/plugins/CodeMirror/addon/lint/csslint.js").wait() 
 	//.script("https://rawgithub.com/stubbornella/csslint/master/release/csslint.js").wait() 
 
@@ -59,116 +105,169 @@ $LAB.script("js/jquery-2.1.1.js").wait()
  		var diy_o =  new diy_tools();
 					//name: "text/x-csrc", 
         	$(function(){   
-			var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
-				mode: { 
-					name: "javascript", 
-					globalVars: true
-				},
-				lint: true,
-				lineNumbers: true,
-				theme: "default",
-				tabMode: "indent",
-				gutters: ["CodeMirror-lint-markers"],
-				matchBrackets: true,
-				onBlur: function(){
-					editor.save();
-				},
-				onChange: function(){
-					$("#changeimg").show();
-				}, 
-				extraKeys: {
-					'Cmd-/' : 'toggleComment',
-					'Ctrl-/' : 'toggleComment',
-					"Ctrl-Space": "autocomplete",
-				        "F11": function(cm) {
-				        	cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-				        },
-					"Esc": function(cm) {
-						if (cm.getOption("fullScreen")) 
-							cm.setOption("fullScreen", false);
-					}
-				},
-				path: 'js/', 
-				searchMode: 'inline',
-				onCursorActivity: function () {
-					editor.setLineClass(hlLine, null);
-					hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
-				}
-			});
 			$(document).on('click', '#save', function() {
-				console.log(editor.getValue());
+			var promiseToken = diy_o.getToken();
+			promiseToken.success(function (data) {
+				var src1 = "";
+				console.log("editor "+diy_o.diy_editor);
+				$.each(diy_o.diy_editor, function(key, value) {
+					console.log(key);
+					console.log(value);
+					var src = diy_o.diy_editor[key].getValue();
+					var base64 = diy_o.base64();
+					src = encodeURIComponent(src);
+					src = base64.encode(src);
+					src = encodeURIComponent(src);
+					src1 += src;
+					console.log(src);
+				});
+
+				console.log(src1);
+				var device="ourdevice123";
+				var srcfile=src1;
+				var filename="test";
+				var comp="ino";
+				var writedevice="no";
+				var srclib="";
+
+				diy_o.access_token = data.access_token;
+				diy_o.device = device;
+				diy_o.srcfile = srcfile;
+				diy_o.filename = filename;
+				diy_o.comp = comp;
+				diy_o.writedevice = writedevice;
+				diy_o.srclib = srclib;
+
+				var promiseCompile = diy_o.compile();
+				promiseCompile.success(function (data) {
+						console.log('compile:"' + data);       
+				});
 			});
-			$(document).on('click', '#load', function() {
-				editor.setValue(data);
+
 			});
-			$(document).on('click', '#add_file', function() {
-				 dialog.dialog( "open" );
-			 });
-			  var dialog = $( "#dialog" ).dialog({
-				  autoOpen: false,
-				  modal: true,
-				  buttons: {
-					  Add: function() {
-						  addTab();
-						  $( this ).dialog( "close" );
-					  },
-					  Cancel: function() {
-						  $( this ).dialog( "close" );
+
+			 $( document ).tooltip({
+				 items: "img",
+				 content: function() {
+					  var element = $( this );
+					  if ( element.is( "img" ) ) {
+						  return "<span><dl>" 
+						+"<dt>Ctrl-F</dt><dd>Start searching</dd>"
+						+"<dt>Ctrl-G</dt><dd>Find next</dd>"
+						+"<dt>Shift-Ctrl-G</dt><dd>Find previous</dd>"
+						+"<dt>Shift-Ctrl-F</dt><dd>Replace</dd>"
+						+"<dt>Shift-Ctrl-R</dt><dd>Replace all</dd>"
+						+"<dt>F11 when cursor is in the editor</dt><dd> full screen editing.</dd>"
+						+"<dt>Esc </dt><dd>exit full screen edit</dd>"
+						+"</dl></span>";
 					  }
-				  },
-				  close: function() {
-					  form[ 0 ].reset();
+					  },
+				 position: {
+					 my: "center bottom-20",
+					 at: "center top",
+					 using: function( position, feedback ) {
+						 $( this ).css( position );
+						 $( "<div>" )
+							 .addClass( "arrow" )
+							 .addClass( feedback.vertical )
+							 .addClass( feedback.horizontal )
+							 .appendTo( this );
+						 }
+					 }
+		 	});
+			var tabTitle = $( "#tab_title" ),
+			tabContent = $( "#tab_content" ),
+			tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
+			tabCounter = 2;
+			var tabs = $( "#tabs" ).tabs();
+			var dialog = $( "#dialog" ).dialog({
+				 autoOpen: false,
+				 modal: true,
+				 buttons: {
+					 Add: function() {
+						 addTab();
+				  		 $("#files").click();
+						 $( this ).dialog( "close" );
+					 },
+					 Cancel: function() {
+						 $( this ).dialog( "close" );
+					 }
+				 },
+				 close: function() {
+					 form[ 0 ].reset();
+				 }
+			 });
+			 // addTab form: calls addTab function on submit and closes the dialog
+			 var form = dialog.find( "form" ).submit(function( event ) {
+				  addTab();
+				  dialog.dialog( "close" );
+				  event.preventDefault();
+			 });
+			  // actual addTab function: adds new tab using the input from the form above
+			 function addTab() {
+				  var label = tabTitle.val() || "File " + tabCounter,
+				  id = "tabs-" + tabCounter,
+				  li = $( tabTemplate.replace( /#\{href\}/g, "#" + id ).replace( /#\{label\}/g, label ) ),
+				  tabContentHtml = tabContent.val() || "Code " + tabCounter + " name.";
+				  tabs.find( ".ui-tabs-nav" ).append( li );
+				  tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
+				  tabs.tabs( "refresh" );
+				  $("#ui-id-"+tabCounter).click();
+				  $("#ui-id-"+tabCounter).click();
+				  tabCounter++;
+			  }
+			  // addTab button: just opens the dialog
+			  $( "#add_tab" )
+			  .button()
+			  .click(function() {
+				  dialog.dialog( "open" );
+			  });
+			  // close icon: removing the tab on click
+			  tabs.delegate( "span.ui-icon-close", "click", function() {
+				  var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+				  $( "#" + panelId ).remove();
+				  tabs.tabs( "refresh" );
+			  });
+			  tabs.bind( "keyup", function( event ) {
+				  if ( event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE ) {
+					  var panelId = tabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
+					  $( "#" + panelId ).remove();
+					  tabs.tabs( "refresh" );
 				  }
 			  });
-			var data='var widgets = [] \n function updateHints() { \n editor.operation(function(){ \n for (var i = 0; i < widgets.length; ++i) \n editor.removeLineWidget(widgets[i]); \n widgets.length = 0; \n \n JSHINT(editor.getValue()); \n for (var i = 0; i < JSHINT.errors.length; ++i) {\n var err = JSHINT.errors[i]; \n if (!err) continue; \n var msg = document.createElement("div"); \n var icon = msg.appendChild(document.createElement("span")); \n icon.innerHTML = "!!"; \n icon.className = "lint-error-icon"; \n msg.appendChild(document.createTextNode(err.reason)); \n msg.className = "lint-error"; \n widgets.push(editor.addLineWidget(err.line - 1, msg, {coverGutter: false, noHScroll: true})); \n } \n }); \n var info = editor.getScrollInfo(); \n var after = editor.charCoords({line: editor.getCursor().line + 1, ch: 0}, "local").top; \n if (info.top + info.clientHeight < after) \n editor.scrollTo(null, after - info.clientHeight + 3); \n } \n ';
-
-
-			$( "#tabs" ).tabs();
-
-
 			// Check for the various File API support.
 			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				function handleFileSelect(evt) {
+					var files = evt.target.files; // FileList object
 
+					// Loop through the FileList and render image files as thumbnails.
+					for (var i = 0, f; f = files[i]; i++) {
+						// Only process image files.
+						//if (!f.type.match('image.*')) {
+						//	continue;
+						//}
+						var reader = new FileReader();
+						// Closure to capture the file information.
+						reader.onload = (function(theFile) {
+							return function(e) {
+								var panelId = $('.ui-tabs-active').attr( "aria-controls" );
+								 diy_o.editor(e.target.result, panelId);
+							};
+						})(f);
 
+						// Read in the image file as a data URL.
+						reader.readAsText(f);
+					}
+				}
 
-				// Create Base64 Object
-				var Base64={_keyStr:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",encode:function(e){var t="";var n,r,i,s,o,u,a;var f=0;e=Base64._utf8_encode(e);while(f<e.length){n=e.charCodeAt(f++);r=e.charCodeAt(f++);i=e.charCodeAt(f++);s=n>>2;o=(n&3)<<4|r>>4;u=(r&15)<<2|i>>6;a=i&63;if(isNaN(r)){u=a=64}else if(isNaN(i)){a=64}t=t+this._keyStr.charAt(s)+this._keyStr.charAt(o)+this._keyStr.charAt(u)+this._keyStr.charAt(a)}return t},decode:function(e){var t="";var n,r,i;var s,o,u,a;var f=0;e=e.replace(/[^A-Za-z0-9\+\/\=]/g,"");while(f<e.length){s=this._keyStr.indexOf(e.charAt(f++));o=this._keyStr.indexOf(e.charAt(f++));u=this._keyStr.indexOf(e.charAt(f++));a=this._keyStr.indexOf(e.charAt(f++));n=s<<2|o>>4;r=(o&15)<<4|u>>2;i=(u&3)<<6|a;t=t+String.fromCharCode(n);if(u!=64){t=t+String.fromCharCode(r)}if(a!=64){t=t+String.fromCharCode(i)}}t=Base64._utf8_decode(t);return t},_utf8_encode:function(e){e=e.replace(/\r\n/g,"\n");var t="";for(var n=0;n<e.length;n++){var r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r)}else if(r>127&&r<2048){t+=String.fromCharCode(r>>6|192);t+=String.fromCharCode(r&63|128)}else{t+=String.fromCharCode(r>>12|224);t+=String.fromCharCode(r>>6&63|128);t+=String.fromCharCode(r&63|128)}}return t},_utf8_decode:function(e){var t="";var n=0;var r=c1=c2=0;while(n<e.length){r=e.charCodeAt(n);if(r<128){t+=String.fromCharCode(r);n++}else if(r>191&&r<224){c2=e.charCodeAt(n+1);t+=String.fromCharCode((r&31)<<6|c2&63);n+=2}else{c2=e.charCodeAt(n+1);c3=e.charCodeAt(n+2);t+=String.fromCharCode((r&15)<<12|(c2&63)<<6|c3&63);n+=3}}return t}}
-
-
-
-
-function handleFileSelect(evt) {
-	var files = evt.target.files; // FileList object
-
-	// Loop through the FileList and render image files as thumbnails.
-	for (var i = 0, f; f = files[i]; i++) {
-		// Only process image files.
-		//if (!f.type.match('image.*')) {
-		//	continue;
-		//}
-		var reader = new FileReader();
-		// Closure to capture the file information.
-		reader.onload = (function(theFile) {
-			return function(e) {
-				 editor.setValue(e.target.result);
-			};
-		})(f);
-
-		// Read in the image file as a data URL.
-		reader.readAsText(f);
-	}
-}
-
-
-document.getElementById('files').addEventListener('change', handleFileSelect, false);
+				document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
 
 
 				  // Great success! All the File APIs are supported.
-				  } else {
+			  } else {
 				    alert('The File APIs are not fully supported in this browser.');
-			    }
-
+			  }
 
 
 
@@ -194,34 +293,33 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
 <body>
 	<div id="devices" class="devices">
 	</div>
-	<div id="myTextAreadiv" class="myTextAreadiv">
-		<p>The keybindings are:</p>
-		<dl>
-			<dt>Ctrl-F / Cmd-F</dt><dd>Start searching</dd>
-			<dt>Ctrl-G / Cmd-G</dt><dd>Find next</dd>
-			<dt>Shift-Ctrl-G / Shift-Cmd-G</dt><dd>Find previous</dd>
-			<dt>Shift-Ctrl-F / Cmd-Option-F</dt><dd>Replace</dd>
-			<dt>Shift-Ctrl-R / Shift-Cmd-Option-F</dt><dd>Replace all</dd>
-			Press F11 when cursor is in the editor to toggle full screen editing.<br> 
-			Esc can also be used to exit full screen editi
-			<div id="save">save</div>
-			<div id="load">save</div>
-		</dl>
-	</div>	
-	<button id="add_file">Add File</button>
-				<input type="file" id="files" name="files[]" multiple />
-				<output id="list"></output>
+	<div id="editormenou">	
+		<div style="height:0px;overflow:hidden">
+			<input type="file" id="files" name="files[]"  multiple /> <output id="list"></output>
+		</div>
+		<button id="add_tab">Add file</button>
+		<button id="save">compile</button>
+		 <a href="https://fkdfjkdjfkjdkfsd.help.jpg">
+			 <img src="help" alt="help" class="ui-corner-all">
+		 </a>
+	</div>
 	<div id="tabs">
 		<ul>
-			<li>Tab 1</li>
-			<li>Tab 2</li>
 		</ul>
-		<div>
-			<textarea id="code" cols="150" rows="50"></textarea>
+		<div id="diy_editor" class="diy_editor">
 		</div>
 	</div>
 	<div id="dataDev" class="dataDev">
 	</div>
-	<div id="dialog" title="Tab data"></div>
+	<div id="dialog" title="Tab data">
+		<form>
+			<fieldset class="ui-helper-reset">
+				<label for="tab_title">Title</label>
+				<input type="text" name="tab_title" id="tab_title" value="File Title" class="ui-widget-content ui-corner-all">
+				<label for="tab_content">Content</label>
+				<textarea name="tab_content" id="tab_content" class="ui-widget-content ui-corner-all">Code desc </textarea>
+			</fieldset>
+		</form>
+	</div>
 </body>
 </html>
