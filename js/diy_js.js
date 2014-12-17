@@ -6,8 +6,9 @@ function diy_tools () {
         this.client_id = "user";
         this.client_secret = "password";
         this.device = "";
-        this.diy_editor = {};
-        this.editor_filemode = "";
+        this.diy_editor = {};   	// editor instance
+        this.diy_editor_properties= {};	// properties for editor instance
+        this.editor_filemode = "";	// filemode    sketch / lib
 
 
 }
@@ -137,8 +138,10 @@ diy_tools.prototype.compile = function()  {
 	});
 }
 
-diy_tools.prototype.editor = function(str,nr)  {
+diy_tools.prototype.editor = function(str,nr,filename)  {
   var editordom=nr;
+    this.diy_editor_properties['diy_code_'+editordom+'_'+this.editor_filemode]={};
+    this.diy_editor_properties['diy_code_'+editordom+'_'+this.editor_filemode]["name"]=filename;
   $("#"+editordom).append('<div id="diy_div_'+editordom+'"><textarea id="diy_code_'+editordom+'" name="'+this.editor_filemode+'" class="diy_code"  cols="150" rows="50"></textarea></div>');
     this.diy_editor['diy_code_'+editordom+'_'+this.editor_filemode] = CodeMirror.fromTextArea(document.getElementById("diy_code_"+editordom), {
 	mode: { 

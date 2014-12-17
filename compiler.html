@@ -109,7 +109,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			var promiseToken = diy_o.getToken();
 			promiseToken.success(function (data) {
 				var srcfile="";
-				var srclib="";
+				var srclib= {};
 				console.log("editor "+diy_o.diy_editor);
 				$.each(diy_o.diy_editor, function(key, value) {
 					console.log(key);
@@ -128,7 +128,8 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 						src2 = encodeURIComponent(src2);
 						src2 = base64.encode(src2);
 						src2 = encodeURIComponent(src2);
-						srclib += src2;
+						var filename = diy_o.diy_editor_properties[key]["name"];
+						srclib[filename] = src2;
 					}
 				});
 
@@ -280,9 +281,11 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 						var reader = new FileReader();
 						// Closure to capture the file information.
 						reader.onload = (function(theFile) {
+							var filename = theFile.name;
+							console.log(filename);
 							return function(e) {
 								var panelId = $('.ui-tabs-active').attr( "aria-controls" );
-								 diy_o.editor(e.target.result, panelId);
+								 diy_o.editor(e.target.result, panelId, filename);
 							};
 						})(f);
 
