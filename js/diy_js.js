@@ -7,6 +7,7 @@ function diy_tools () {
         this.client_secret = "password";
         this.device = "";
         this.diy_editor = {};
+        this.editor_filemode = "";
 
 
 }
@@ -138,8 +139,8 @@ diy_tools.prototype.compile = function()  {
 
 diy_tools.prototype.editor = function(str,nr)  {
   var editordom=nr;
-  $("#"+editordom).append('<div id="diy_div_'+editordom+'"><textarea id="diy_code_'+editordom+'" class="diy_code" cols="150" rows="50"></textarea></div>');
-    this.diy_editor['diy_code_'+editordom] = CodeMirror.fromTextArea(document.getElementById("diy_code_"+editordom), {
+  $("#"+editordom).append('<div id="diy_div_'+editordom+'"><textarea id="diy_code_'+editordom+'" name="'+this.editor_filemode+'" class="diy_code"  cols="150" rows="50"></textarea></div>');
+    this.diy_editor['diy_code_'+editordom+'_'+this.editor_filemode] = CodeMirror.fromTextArea(document.getElementById("diy_code_"+editordom), {
 	mode: { 
 		name: "javascript", 
 		globalVars: true
@@ -175,5 +176,5 @@ diy_tools.prototype.editor = function(str,nr)  {
 		hlLine = editor.setLineClass(editor.getCursor().line, "activeline");
 	}
     });
-    this.diy_editor['diy_code_'+editordom].setValue(str);
+    this.diy_editor['diy_code_'+editordom+'_'+this.editor_filemode].setValue(str);
 }

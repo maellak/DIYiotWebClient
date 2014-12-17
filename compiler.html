@@ -108,27 +108,36 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			$(document).on('click', '#save', function() {
 			var promiseToken = diy_o.getToken();
 			promiseToken.success(function (data) {
-				var src1 = "";
+				var srcfile="";
+				var srclib="";
 				console.log("editor "+diy_o.diy_editor);
 				$.each(diy_o.diy_editor, function(key, value) {
 					console.log(key);
 					console.log(value);
-					var src = diy_o.diy_editor[key].getValue();
-					var base64 = diy_o.base64();
-					src = encodeURIComponent(src);
-					src = base64.encode(src);
-					src = encodeURIComponent(src);
-					src1 += src;
-					console.log(src);
+					var sketch = key.substring(key.lastIndexOf("_") + 1);
+					if(sketch == "sketch"){
+						var src = diy_o.diy_editor[key].getValue();
+						var base64 = diy_o.base64();
+						src = encodeURIComponent(src);
+						src = base64.encode(src);
+						src = encodeURIComponent(src);
+						srcfile = src;
+					}else{
+						var src2 = diy_o.diy_editor[key].getValue();
+						var base64 = diy_o.base64();
+						src2 = encodeURIComponent(src2);
+						src2 = base64.encode(src2);
+						src2 = encodeURIComponent(src2);
+						srclib += src2;
+					}
 				});
 
-				console.log(src1);
+				console.log("srcfile"+srcfile);
+				console.log("srclib"+srclib);
 				var device="ourdevice123";
-				var srcfile=src1;
 				var filename="test";
 				var comp="ino";
 				var writedevice="no";
-				var srclib="";
 
 				diy_o.access_token = data.access_token;
 				diy_o.device = device;
@@ -185,8 +194,14 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				 modal: true,
 				 buttons: {
 					 Add: function() {
-						 addTab();
+						 var c = addTab();
+				  		 $("#ui-id-"+c).click();
+						 diy_o.editor_filemode = $("#add_tab").attr('name');
+						 $("#ui-id-"+c).prop('name', diy_o.editor_filemode);
 				  		 $("#files").click();
+						 $("#add_tab").prop('name', 'lib');
+						 $("#add_tab").empty();
+						 $("#add_tab").html("Add lib");
 						 $( this ).dialog( "close" );
 					 },
 					 Cancel: function() {
@@ -214,7 +229,9 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				  tabs.tabs( "refresh" );
 				  $("#ui-id-"+tabCounter).click();
 				  $("#ui-id-"+tabCounter).click();
+				  var c = tabCounter;
 				  tabCounter++;
+				  return c;
 			  }
 			  // addTab button: just opens the dialog
 			  $( "#add_tab" )
@@ -225,12 +242,26 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			  // close icon: removing the tab on click
 			  tabs.delegate( "span.ui-icon-close", "click", function() {
 				  var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+				  console.log("delegate"+panelId);
+				  //textarea name = sketch gia to lektiko sto add sketch kai sto mode_editor
+				  if($( "#diy_code_" + panelId ).attr("name") == "sketch"){
+					 $( "#add_tab" ).prop("name","sketch");
+					 $("#add_tab").empty();
+					 $("#add_tab").html("Add sketch");
+				  }
 				  $( "#" + panelId ).remove();
 				  tabs.tabs( "refresh" );
 			  });
 			  tabs.bind( "keyup", function( event ) {
 				  if ( event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE ) {
-					  var panelId = tabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
+					 var panelId = tabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
+				  	console.log("keyup"+panelId);
+				  	//textarea name = sketch
+				  	 if($( "#diy_code_" + panelId ).attr("name") == "sketch"){
+						 $( "#add_tab" ).prop("name","sketch");
+						 $("#add_tab").empty();
+						 $("#add_tab").html("Add sketch");
+					  }
 					  $( "#" + panelId ).remove();
 					  tabs.tabs( "refresh" );
 				  }
@@ -297,7 +328,7 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
 		<div style="height:0px;overflow:hidden">
 			<input type="file" id="files" name="files[]"  multiple /> <output id="list"></output>
 		</div>
-		<button id="add_tab">Add file</button>
+		<button id="add_tab" name="sketch" >Add sketch</button>
 		<button id="save">compile</button>
 		 <a href="https://fkdfjkdjfkjdkfsd.help.jpg">
 			 <img src="help" alt="help" class="ui-corner-all">
