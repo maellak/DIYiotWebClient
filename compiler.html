@@ -1,5 +1,6 @@
 <html>
 <head>
+	<meta charset="UTF-8"> 
 
 <link rel="stylesheet" href="js/plugins/CodeMirror/lib/codemirror.css">
 <link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.css">
@@ -56,6 +57,27 @@
 	 bottom: -20px;
 	 top: auto;
 	 }
+	  fieldset {
+		  border: 0;
+	  }
+	  label {
+		  display: block;
+		  margin: 30px 0 0 0;
+	  }
+	  select {
+		  width: 200px;
+	  }
+	  .overflow {
+		  height: 200px;
+	  }
+	   #editormenou {
+		   padding: 4px;
+		   display: inline-block;
+	   }
+	   /* support: IE7 */
+	   *+html #editormenou {
+		   display: inline;
+	   }
  </style>
 <script>
 (function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
@@ -105,16 +127,20 @@ $LAB.script("js/jquery-2.1.1.js").wait()
  		var diy_o =  new diy_tools();
 					//name: "text/x-csrc", 
         	$(function(){   
-			$(document).on('click', '#save', function() {
+			$( "#compile" ).button();
 			var promiseToken = diy_o.getToken();
+			$(document).on('click', '#compile', function() {
+			// get token for the session
 			promiseToken.success(function (data) {
 				var srcfile="";
 				var srclib= {};
 				console.log("editor "+diy_o.diy_editor);
+				// read the files for compile
 				$.each(diy_o.diy_editor, function(key, value) {
 					console.log(key);
 					console.log(value);
 					var sketch = key.substring(key.lastIndexOf("_") + 1);
+					// file for sketch
 					if(sketch == "sketch"){
 						var src = diy_o.diy_editor[key].getValue();
 						var base64 = diy_o.base64();
@@ -123,6 +149,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 						src = encodeURIComponent(src);
 						srcfile = src;
 					}else{
+					// files for libs
 						var src2 = diy_o.diy_editor[key].getValue();
 						var base64 = diy_o.base64();
 						src2 = encodeURIComponent(src2);
@@ -135,10 +162,16 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 
 				console.log("srcfile"+srcfile);
 				console.log("srclib"+srclib);
-				var device="ourdevice123";
-				var filename="test";
+				//set the other for api compile
+				var device=$('#devices').find(":selected").text();
+				var filename=$("#project").val();
 				var comp="ino";
-				var writedevice="no";
+				if($("#check").prop("checked") == true){
+					var writedevice="yes";
+					//	alert("Checkbox is checked.");
+				}else if($("#check").prop("checked") == false){
+					var writedevice="no";
+				}
 
 				diy_o.access_token = data.access_token;
 				diy_o.device = device;
@@ -149,6 +182,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				diy_o.srclib = srclib;
 
 				var promiseCompile = diy_o.compile();
+				// run  compiler
 				promiseCompile.success(function (data) {
 						console.log('compile:"' + data);       
 				});
@@ -157,6 +191,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			});
 
 			 $( document ).tooltip({
+				 // set tooltip for editor featires
 				 items: "img",
 				 content: function() {
 					  var element = $( this );
@@ -185,10 +220,11 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 						 }
 					 }
 		 	});
+			//dialog for add sketch / libs
 			var tabTitle = $( "#tab_title" ),
 			tabContent = $( "#tab_content" ),
 			tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
-			tabCounter = 2;
+			tabCounter = 0;
 			var tabs = $( "#tabs" ).tabs();
 			var dialog = $( "#dialog" ).dialog({
 				 autoOpen: false,
@@ -196,13 +232,9 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				 buttons: {
 					 Add: function() {
 						 var c = addTab();
-				  		 $("#ui-id-"+c).click();
 						 diy_o.editor_filemode = $("#add_tab").attr('name');
-						 $("#ui-id-"+c).prop('name', diy_o.editor_filemode);
 				  		 $("#files").click();
-						 $("#add_tab").prop('name', 'lib');
-						 $("#add_tab").empty();
-						 $("#add_tab").html("Add lib");
+
 						 $( this ).dialog( "close" );
 					 },
 					 Cancel: function() {
@@ -227,16 +259,13 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				  tabContentHtml = tabContent.val() || "Code " + tabCounter + " name.";
 				  tabs.find( ".ui-tabs-nav" ).append( li );
 				  tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
+				  console.log(tabCounter);
 				  tabs.tabs( "refresh" );
-				  $("#ui-id-"+tabCounter).click();
-				  $("#ui-id-"+tabCounter).click();
-				  var c = tabCounter;
+				   $( "#tabs" ).tabs( "option", "active", tabCounter );
 				  tabCounter++;
-				  return c;
 			  }
 			  // addTab button: just opens the dialog
-			  $( "#add_tab" )
-			  .button()
+			  $( "#add_tab" ).button()
 			  .click(function() {
 				  dialog.dialog( "open" );
 			  });
@@ -269,19 +298,20 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			  });
 			// Check for the various File API support.
 			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				// add files in editor
 				function handleFileSelect(evt) {
 					var files = evt.target.files; // FileList object
 
 					// Loop through the FileList and render image files as thumbnails.
 					for (var i = 0, f; f = files[i]; i++) {
-						// Only process image files.
-						//if (!f.type.match('image.*')) {
-						//	continue;
-						//}
 						var reader = new FileReader();
 						// Closure to capture the file information.
 						reader.onload = (function(theFile) {
 							var filename = theFile.name;
+							 $("#ui-id-"+tabCounter--).prop('name', diy_o.editor_filemode);
+							 $("#add_tab").prop('name', 'lib');
+							 $("#add_tab").empty();
+							 $("#add_tab").html("Add lib");
 							console.log(filename);
 							return function(e) {
 								var panelId = $('.ui-tabs-active').attr( "aria-controls" );
@@ -302,6 +332,19 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			  } else {
 				    alert('The File APIs are not fully supported in this browser.');
 			  }
+
+			   $( "#devices" ).selectmenu();
+			  // get devices for compile
+			promiseToken.success(function (data) {
+				diy_o.access_token = data.access_token;
+				var promiseDevices = diy_o.getDevices();
+				promiseDevices.success(function (devices) {
+					$.each(devices.result.dev, function(i, item) {
+						$("#devices").append('<option value="'+ item.device +'">'+ item.device +'</option>');
+					});
+				});
+			});
+			$( "#check" ).button();
 
 
 
@@ -325,18 +368,23 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
 
 </head>
 <body>
-	<div id="devices" class="devices">
-	</div>
-	<div id="editormenou">	
+
+	<div id="editormenou" class="ui-widget-header ui-corner-all">
 		<div style="height:0px;overflow:hidden">
 			<input type="file" id="files" name="files[]"  multiple /> <output id="list"></output>
 		</div>
 		<button id="add_tab" name="sketch" >Add sketch</button>
-		<button id="save">compile</button>
+		<button id="compile">compile</button>
+		<input id="project" type="text" placeholder="projectname" required/> 
+		 <label for="check">Write</label>
+		 <input type="checkbox" id="check" name="check" />
+		 <select name="devices" id="devices">
+				 <option value="none">Select a device</option>
+		 </select>
+	</div>
 		 <a href="https://fkdfjkdjfkjdkfsd.help.jpg">
 			 <img src="help" alt="help" class="ui-corner-all">
 		 </a>
-	</div>
 	<div id="tabs">
 		<ul>
 		</ul>

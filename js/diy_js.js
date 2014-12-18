@@ -4,7 +4,7 @@ function diy_tools () {
         this.https_url = "https://"+diy__hostname;
         this.wss_url = "wss://"+diy__hostname;
         this.client_id = "user";
-        this.client_secret = "password";
+        this.client_secret = "user";
         this.device = "";
         this.diy_editor = {};   	// editor instance
         this.diy_editor_properties= {};	// properties for editor instance
