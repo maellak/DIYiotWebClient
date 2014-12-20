@@ -1,0 +1,407 @@
+<html>
+<head>
+	<meta charset="UTF-8"> 
+
+<link rel="stylesheet" href="js/plugins/CodeMirror/lib/codemirror.css">
+<link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.css">
+<link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.theme.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/doc/docs.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/hint/show-hint.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/display/fullscreen.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/lint/lint.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/dialog/dialog.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/addon/search/matchesonscrollbar.css">
+<link rel="stylesheet" href="js/plugins/CodeMirror/theme/xq-light.css">
+ <style>
+	 .ui-tooltip, .arrow:after {
+	 background: black;
+	 border: 2px solid white;
+	 }
+	 .ui-tooltip {
+	 padding: 10px 20px;
+	 color: white;
+	 border-radius: 20px;
+	 font: bold 11px "Helvetica Neue", Sans-Serif;
+	 text-transform: uppercase;
+	 box-shadow: 0 0 7px black;
+	 }
+	 .arrow {
+	 width: 70px;
+	 height: 16px;
+	 overflow: hidden;
+	 position: absolute;
+	 left: 50%;
+	 margin-left: -35px;
+	 bottom: -16px;
+	 }
+	 .arrow.top {
+	 top: -16px;
+	 bottom: auto;
+	 }
+	 .arrow.left {
+	 left: 20%;
+	 }
+	 .arrow:after {
+	 content: "";
+	 position: absolute;
+	 left: 20px;
+	 top: -20px;
+	 width: 25px;
+	 height: 25px;
+	 box-shadow: 6px 5px 9px -9px black;
+	 -webkit-transform: rotate(45deg);
+	 -ms-transform: rotate(45deg);
+	 transform: rotate(45deg);
+	 }
+	 .arrow.top:after {
+	 bottom: -20px;
+	 top: auto;
+	 }
+	  fieldset {
+		  border: 0;
+	  }
+	  label {
+		  display: block;
+		  margin: 30px 0 0 0;
+	  }
+	  select {
+		  width: 200px;
+	  }
+	  .overflow {
+		  height: 200px;
+	  }
+	   #editormenou {
+		   padding: 4px;
+		   display: inline-block;
+	   }
+	   /* support: IE7 */
+	   *+html #editormenou {
+		   display: inline;
+	   }
+ </style>
+<script>
+(function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
+function f(){
+
+	 
+// ***************************************************************
+// *********************** $LAB stuff ****************************
+// ***************************************************************
+$LAB.script("js/jquery-2.1.1.js").wait() 
+        .script("js/autobahn.js").wait() 
+    	.script("js/diy_js.js").wait() 
+    	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
+	.script("js/plugins/CodeMirror/lib/codemirror.js").wait()
+	.script("js/plugins/CodeMirror/mode/clike/clike.js").wait()
+	.script("js/plugins/CodeMirror/addon/edit/matchbrackets.js").wait()
+	.script("js/plugins/CodeMirror/addon/comment/comment.js").wait()
+	.script("js/plugins/CodeMirror/addon/search/search.js").wait()
+	.script("js/plugins/CodeMirror/addon/search/searchcursor.js").wait()
+	.script("js/plugins/CodeMirror/addon/dialog/dialog.js").wait()
+	.script("js/plugins/CodeMirror/addon/scroll/annotatescrollbar.js").wait()
+	.script("js/plugins/CodeMirror/addon/search/matchesonscrollbar.js").wait()
+	.script("js/plugins/CodeMirror/addon/display/fullscreen.js").wait()
+	.script("js/plugins/CodeMirror/addon/hint/anyword-hint.js").wait()
+	.script("js/plugins/CodeMirror/addon/hint/show-hint.js").wait()
+
+	.script("js/plugins/CodeMirror/addon/lint/lint.js").wait()
+	.script("js/plugins/CodeMirror/mode/css/css.js").wait()
+	.script("js/plugins/CodeMirror/addon/lint/javascript-lint.js").wait()
+	.script("js/plugins/CodeMirror/mode/javascript/javascript.js").wait()
+	.script("js/plugins/CodeMirror/addon/lint/json-lint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/css-lint.js").wait()
+	.script("js/plugins/CodeMirror/addon/selection/active-line.js").wait()
+	//.script("http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/jshint.js").wait()
+	//.script("https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js").wait() 
+	.script("js/plugins/CodeMirror/addon/lint/jsonlint.js").wait()
+	.script("js/plugins/CodeMirror/addon/lint/csslint.js").wait() 
+	//.script("https://rawgithub.com/stubbornella/csslint/master/release/csslint.js").wait() 
+
+        .wait(function(){
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+         	AUTOBAHN_DEBUG = true;
+ 		ab.debug(true);
+ 		var diy_o =  new diy_tools();
+					//name: "text/x-csrc", 
+        	$(function(){   
+			$( "#compile" ).button();
+			var promiseToken = diy_o.getToken();
+			$(document).on('click', '#compile', function() {
+			// get token for the session
+			promiseToken.success(function (data) {
+				var srcfile="";
+				var srclib= {};
+				console.log("editor "+diy_o.diy_editor);
+				// read the files for compile
+				$.each(diy_o.diy_editor, function(key, value) {
+					console.log(key);
+					console.log(value);
+					var sketch = key.substring(key.lastIndexOf("_") + 1);
+					// file for sketch
+					if(sketch == "sketch"){
+						var src = diy_o.diy_editor[key].getValue();
+						var base64 = diy_o.base64();
+						src = encodeURIComponent(src);
+						src = base64.encode(src);
+						src = encodeURIComponent(src);
+						srcfile = src;
+					}else{
+					// files for libs
+						var src2 = diy_o.diy_editor[key].getValue();
+						var base64 = diy_o.base64();
+						src2 = encodeURIComponent(src2);
+						src2 = base64.encode(src2);
+						src2 = encodeURIComponent(src2);
+						var filename = diy_o.diy_editor_properties[key]["name"];
+						srclib[filename] = src2;
+					}
+				});
+
+				console.log("srcfile"+srcfile);
+				console.log("srclib"+srclib);
+				//set the other for api compile
+				var device=$('#devices').find(":selected").text();
+				var filename=$("#project").val();
+				var comp="ino";
+				if($("#check").prop("checked") == true){
+					var writedevice="yes";
+					//	alert("Checkbox is checked.");
+				}else if($("#check").prop("checked") == false){
+					var writedevice="no";
+				}
+
+				diy_o.access_token = data.access_token;
+				diy_o.device = device;
+				diy_o.srcfile = srcfile;
+				diy_o.filename = filename;
+				diy_o.comp = comp;
+				diy_o.writedevice = writedevice;
+				diy_o.srclib = srclib;
+
+				var promiseCompile = diy_o.compile();
+				// run  compiler
+				promiseCompile.success(function (data) {
+						console.log('compile:"' + data);       
+				});
+			});
+
+			});
+
+			 $( document ).tooltip({
+				 // set tooltip for editor featires
+				 items: "img",
+				 content: function() {
+					  var element = $( this );
+					  if ( element.is( "img" ) ) {
+						  return "<span><dl>" 
+						+"<dt>Ctrl-F</dt><dd>Start searching</dd>"
+						+"<dt>Ctrl-G</dt><dd>Find next</dd>"
+						+"<dt>Shift-Ctrl-G</dt><dd>Find previous</dd>"
+						+"<dt>Shift-Ctrl-F</dt><dd>Replace</dd>"
+						+"<dt>Shift-Ctrl-R</dt><dd>Replace all</dd>"
+						+"<dt>F11 when cursor is in the editor</dt><dd> full screen editing.</dd>"
+						+"<dt>Esc </dt><dd>exit full screen edit</dd>"
+						+"</dl></span>";
+					  }
+					  },
+				 position: {
+					 my: "center bottom-20",
+					 at: "center top",
+					 using: function( position, feedback ) {
+						 $( this ).css( position );
+						 $( "<div>" )
+							 .addClass( "arrow" )
+							 .addClass( feedback.vertical )
+							 .addClass( feedback.horizontal )
+							 .appendTo( this );
+						 }
+					 }
+		 	});
+			//dialog for add sketch / libs
+			var tabTitle = $( "#tab_title" ),
+			tabContent = $( "#tab_content" ),
+			tabTemplate = "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close' role='presentation'>Remove Tab</span></li>",
+			tabCounter = 0;
+			var tabs = $( "#tabs" ).tabs();
+			var dialog = $( "#dialog" ).dialog({
+				 autoOpen: false,
+				 modal: true,
+				 buttons: {
+					 Add: function() {
+						 var c = addTab();
+						 diy_o.editor_filemode = $("#add_tab").attr('name');
+				  		 $("#files").click();
+
+						 $( this ).dialog( "close" );
+					 },
+					 Cancel: function() {
+						 $( this ).dialog( "close" );
+					 }
+				 },
+				 close: function() {
+					 form[ 0 ].reset();
+				 }
+			 });
+			 // addTab form: calls addTab function on submit and closes the dialog
+			 var form = dialog.find( "form" ).submit(function( event ) {
+				  addTab();
+				  dialog.dialog( "close" );
+				  event.preventDefault();
+			 });
+			  // actual addTab function: adds new tab using the input from the form above
+			 function addTab() {
+				  var label = tabTitle.val() || "File " + tabCounter,
+				  id = "tabs-" + tabCounter,
+				  li = $( tabTemplate.replace( /#\{href\}/g, "#" + id ).replace( /#\{label\}/g, label ) ),
+				  tabContentHtml = tabContent.val() || "Code " + tabCounter + " name.";
+				  tabs.find( ".ui-tabs-nav" ).append( li );
+				  tabs.append( "<div id='" + id + "'><p>" + tabContentHtml + "</p></div>" );
+				  console.log(tabCounter);
+				  tabs.tabs( "refresh" );
+				   $( "#tabs" ).tabs( "option", "active", tabCounter );
+				  tabCounter++;
+			  }
+			  // addTab button: just opens the dialog
+			  $( "#add_tab" ).button()
+			  .click(function() {
+				  dialog.dialog( "open" );
+			  });
+			  // close icon: removing the tab on click
+			  tabs.delegate( "span.ui-icon-close", "click", function() {
+				  var panelId = $( this ).closest( "li" ).remove().attr( "aria-controls" );
+				  console.log("delegate"+panelId);
+				  //textarea name = sketch gia to lektiko sto add sketch kai sto mode_editor
+				  if($( "#diy_code_" + panelId ).attr("name") == "sketch"){
+					 $( "#add_tab" ).prop("name","sketch");
+					 $("#add_tab").empty();
+					 $("#add_tab").html("Add sketch");
+				  }
+				  $( "#" + panelId ).remove();
+				  tabs.tabs( "refresh" );
+			  });
+			  tabs.bind( "keyup", function( event ) {
+				  if ( event.altKey && event.keyCode === $.ui.keyCode.BACKSPACE ) {
+					 var panelId = tabs.find( ".ui-tabs-active" ).remove().attr( "aria-controls" );
+				  	console.log("keyup"+panelId);
+				  	//textarea name = sketch
+				  	 if($( "#diy_code_" + panelId ).attr("name") == "sketch"){
+						 $( "#add_tab" ).prop("name","sketch");
+						 $("#add_tab").empty();
+						 $("#add_tab").html("Add sketch");
+					  }
+					  $( "#" + panelId ).remove();
+					  tabs.tabs( "refresh" );
+				  }
+			  });
+			// Check for the various File API support.
+			if (window.File && window.FileReader && window.FileList && window.Blob) {
+				// add files in editor
+				function handleFileSelect(evt) {
+					var files = evt.target.files; // FileList object
+
+					// Loop through the FileList and render image files as thumbnails.
+					for (var i = 0, f; f = files[i]; i++) {
+						var reader = new FileReader();
+						// Closure to capture the file information.
+						reader.onload = (function(theFile) {
+							var filename = theFile.name;
+							 $("#ui-id-"+tabCounter--).prop('name', diy_o.editor_filemode);
+							 $("#add_tab").prop('name', 'lib');
+							 $("#add_tab").empty();
+							 $("#add_tab").html("Add lib");
+							console.log(filename);
+							return function(e) {
+								var panelId = $('.ui-tabs-active').attr( "aria-controls" );
+								 diy_o.editor(e.target.result, panelId, filename);
+							};
+						})(f);
+
+						// Read in the image file as a data URL.
+						reader.readAsText(f);
+					}
+				}
+
+				document.getElementById('files').addEventListener('change', handleFileSelect, false);
+
+
+
+				  // Great success! All the File APIs are supported.
+			  } else {
+				    alert('The File APIs are not fully supported in this browser.');
+			  }
+
+			   $( "#devices" ).selectmenu();
+			  // get devices for compile
+			promiseToken.success(function (data) {
+				diy_o.access_token = data.access_token;
+				var promiseDevices = diy_o.getDevices();
+				promiseDevices.success(function (devices) {
+					$.each(devices.result.dev, function(i, item) {
+						$("#devices").append('<option value="'+ item.device +'">'+ item.device +'</option>');
+					});
+				});
+			});
+			$( "#check" ).button();
+
+
+
+  		});
+
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+        });
+// ***************************************************************
+// *********************** $LAB stuff  ***************************
+// ***************************************************************
+
+}
+H(function(){if("item"in c){if(!c[0]){H(arguments.callee,25);return}c=c[0]}var a=b.createElement("script"),e=false;a.onload=a[E]=function(){if((a[D]&&a[D]!=="complete"&&a[D]!=="loaded")||e){return false}a.onload=a[E]=null;e=true;f()};
+a.src="js/LAB.js";
+c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=function(){b.removeEventListener(F,d,false);b[D]="complete"},false)}})(this,document);
+
+
+</script>
+
+</head>
+<body>
+
+	<div id="editormenou" class="ui-widget-header ui-corner-all">
+		<div style="height:0px;overflow:hidden">
+			<input type="file" id="files" name="files[]"  multiple /> <output id="list"></output>
+		</div>
+		<button id="add_tab" name="sketch" >Add sketch</button>
+		<button id="compile">compile</button>
+		<input id="project" type="text" placeholder="projectname" required/> 
+		 <label for="check">Write</label>
+		 <input type="checkbox" id="check" name="check" />
+		 <select name="devices" id="devices">
+				 <option value="none">Select a device</option>
+		 </select>
+	</div>
+		 <a href="https://fkdfjkdjfkjdkfsd.help.jpg">
+			 <img src="help" alt="help" class="ui-corner-all">
+		 </a>
+	<div id="tabs">
+		<ul>
+		</ul>
+		<div id="diy_editor" class="diy_editor">
+		</div>
+	</div>
+	<div id="dataDev" class="dataDev">
+	</div>
+	<div id="dialog" title="Tab data">
+		<form>
+			<fieldset class="ui-helper-reset">
+				<label for="tab_title">Title</label>
+				<input type="text" name="tab_title" id="tab_title" value="File Title" class="ui-widget-content ui-corner-all">
+				<label for="tab_content">Content</label>
+				<textarea name="tab_content" id="tab_content" class="ui-widget-content ui-corner-all">Code desc </textarea>
+			</fieldset>
+		</form>
+	</div>
+</body>
+</html>
