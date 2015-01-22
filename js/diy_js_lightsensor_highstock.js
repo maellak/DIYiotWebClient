@@ -204,7 +204,7 @@ diy_tools.prototype.wss_connect = function()  {
 				
 				//decode timestamp, add to list
 				var d = new Date(subject.currenttime);
-				$( "#dataDev" ).append( subject.i + ". " + d + ", " + data.data + " kOhm<br>" );
+				$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.currenty + " kOhm<br>" );
 				//---plot code end---
 			});
 		},
