@@ -38,7 +38,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 			 * ******************************************
 			*/ 
 			var promiseToken = diy_o.getToken();
-			promiseToken.success(function (data) {
+			promiseToken.done(function (data) {
 				diy_o.access_token = data.access_token;
 				var promiseDevices = diy_o.getDevices();
 				promiseDevices.success(function (devices) {
@@ -52,7 +52,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				var id = $(this).attr('id');
 				var device=id.substr(4)
 				//console.log('Devices:"' + device);	
-				promiseToken.success(function (data) {
+				promiseToken.done(function (data) {
 					diy_o.device = device;
 					//diy_o.device = "kittensCategory";
 					diy_o.access_token = data.access_token;
