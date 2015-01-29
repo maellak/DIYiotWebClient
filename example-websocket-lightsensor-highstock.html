@@ -1,0 +1,173 @@
+<html>
+<head>
+  <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- sb-admin CSS -->
+    <link href="css/sb-admin.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/custom.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<script>
+
+(function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
+function f(){
+
+// ***************************************************************
+// *********************** $LAB stuff ****************************
+// ***************************************************************
+$LAB.script("js/jquery-2.1.1.js").wait()
+        .script("js/autobahn.js").wait()
+    	.script("js/diy_js_lightsensor_highstock.js").wait() 
+    	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
+    	.script("js/plugins/highstock/highstock.js").wait() 
+    	.script("js/plugins/highstock/modules/exporting.js").wait() 
+        .wait(function(){
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+         	AUTOBAHN_DEBUG = true;
+ 		ab.debug(true);
+ 		var diy_o =  new diy_tools();
+        	$(function(){   
+			/* 
+			 * ******************************************
+			 * get token and connect to  wss 
+			 * connect is using fro data read from device 
+			 * ******************************************
+			*/ 
+			var promiseToken = diy_o.getToken();
+			promiseToken.done(function (data) {
+				diy_o.access_token = data.access_token;
+				var promiseDevices = diy_o.getDevices();
+				promiseDevices.success(function (devices) {
+					$.each(devices.result.dev, function(i, item) {
+						$('<div id="diy_'+item.device+'" class="diy_devices">'+item.device+'</div>').appendTo('#devices');
+						//console.log('Devices:"' + item.device);	
+					});
+				});
+			});
+			$(document).on('click', '.diy_devices', function() {
+				var id = $(this).attr('id');
+				var device=id.substr(4)
+				//console.log('Devices:"' + device);	
+				promiseToken.done(function (data) {
+					diy_o.device = device;
+					//diy_o.device = "kittensCategory";
+					diy_o.access_token = data.access_token;
+					diy_o.wss_connect();
+				});
+			});
+  		});
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+        });
+// ***************************************************************
+// *********************** $LAB stuff  ***************************
+// ***************************************************************
+
+}
+H(function(){if("item"in c){if(!c[0]){H(arguments.callee,25);return}c=c[0]}var a=b.createElement("script"),e=false;a.onload=a[E]=function(){if((a[D]&&a[D]!=="complete"&&a[D]!=="loaded")||e){return false}a.onload=a[E]=null;e=true;f()};
+a.src="js/LAB.js";
+c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=function(){b.removeEventListener(F,d,false);b[D]="complete"},false)}})(this,document);
+
+
+</script>
+
+</head>
+<body>
+<div id="wrapper">
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Arduino@net</a>
+            </div>
+            
+            <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav side-nav">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                    <li>
+                        <a href="example-page1.html">Example page 1</a>
+                    </li>
+                     <li>
+                        <a href="example-page2.html">Example page 2</a>
+                    </li>
+					<li>
+                        <a href="register.html">Register</a>
+                    </li>
+					<li>
+                        <a href="login.html">Login</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#demo">Dropdown<i class="fa fa-fw fa-caret-down"></i></a>
+                        <ul id="demo" class="collapse">
+                            <li class="active">
+                                <a href="dropdown_item_1.html">Example Dropdown Item 1</a>
+                            </li>
+                            <li>
+                                <a href="dropdown_item_2.html">Example Dropdown Item 2</a>
+                            </li>
+							<li>
+                                <a href="blank-page.html">Blank page</a>
+                            </li>
+                            <li>
+                                <a href="tables.html">Tables</a>
+                            </li>
+							<li>
+                                <a href="forms.html">Forms</a>
+                            </li>
+							<li>
+                                <a href="charts.html">Charts</a>
+                            </li>
+							<li>
+                                <a href="bootstrap-grid.html">Bootstrap grid</a>
+                            </li>
+							<li>
+                                <a href="bootstrap-elements.html">Bootstrap elements</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+<div id="page-wrapper">
+
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">
+                            Devices
+                        </h1>
+                       
+                  </div>
+               </div>
+               
+               <div id="container" style="height: 400px; min-width: 310px"></div>
+               
+               <div id="devices" class="devices">
+               </div>
+               <div id="dataDev" class="dataDev" style="height: 150px; overflow: auto;">
+               </div>
+		  </div>
+</div>
+</div>
+</body?
+</html>
