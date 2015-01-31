@@ -135,7 +135,7 @@ diy_tools.prototype.wss_connect = function()  {
 
 			//initialize plot, select plot options
 			$(function () {
-				$('#container').highcharts({
+				$('#plotcontainer').highcharts({
 				  title: {
 						text: 'Photo Resistance',
 						x: -20 //center
@@ -188,7 +188,7 @@ diy_tools.prototype.wss_connect = function()  {
 				subject.i = subject.i + 1;
 				
 				//add new data to the plot
-				var chart = $('#container').highcharts(),
+				var chart = $('#plotcontainer').highcharts(),
 				    series = chart.series[0];
 				series.addPoint([ subject.datatime[subject.i-1][0], subject.datatime[subject.i-1][1] ], false);
 				chart.redraw();

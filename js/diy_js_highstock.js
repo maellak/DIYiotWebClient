@@ -142,7 +142,7 @@ diy_tools.prototype.wss_connect = function()  {
 				});
 
 				// Create the chart
-				$('#container').highcharts('StockChart', {
+				$('#plotcontainer').highcharts('StockChart', {
 
 
 					rangeSelector: {
@@ -205,7 +205,7 @@ diy_tools.prototype.wss_connect = function()  {
 				subject.i = subject.i + 1;
 				
 				//add new data to the plot
-				var chart = $('#container').highcharts(),
+				var chart = $('#plotcontainer').highcharts(),
 				    series = chart.series[0];
 				series.addPoint([ subject.datatimestamp[subject.i-1][0], subject.datatimestamp[subject.i-1][1] ], false);
 				chart.redraw();

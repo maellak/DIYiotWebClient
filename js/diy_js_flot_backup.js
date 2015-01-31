@@ -132,47 +132,9 @@ diy_tools.prototype.wss_connect = function()  {
 			device.access_token = subject.access_token;
 			device.name = subject.device;
 			devicestr = JSON.stringify(device);
-
-			//initialize plot, select plot options
-			$(function () {
-				$('#plotcontainer').highcharts({
-				  title: {
-						text: 'Light Sensor Mearurements',
-						x: -20 //center
-				  },
-				  subtitle: {
-						text: 'Source: http://arduino.os.cs.teiath.gr',
-						x: -20
-				  },
-				  xAxis: {
-				  		gridLineWidth: 1,
-						title: {
-							text: 'Time (s)',
-						},
-				  },
-				  yAxis: {
-				  		gridLineWidth: 1,
-						title: {
-							text: 'Light (0-1023)'
-						},
-				  },
-				  tooltip: {
-						valueSuffix: ' value'
-				  },
-				  legend: {
-						align: 'right',
-						verticalAlign: 'top',
-						x: -10,
-						y: 50,
-						floating: true
-						},
-				  series: [{
-						name: 'Light value',
-						data: [],
-						animation: false 
-				  }]
-				});
-			});
+			
+			//initialize plot object
+			var plot = $.plot($("#flot-line-chart"), [{data: [], label: "Light Value"}]);
 
 			//connect and wait for data
 			conn.subscribe(subject.device, function(topic, data) {
@@ -186,11 +148,10 @@ diy_tools.prototype.wss_connect = function()  {
 				subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
 				subject.i = subject.i + 1;
 				
-				//add new data to the plot
-				var chart = $('#plotcontainer').highcharts(),
-				    series = chart.series[0];
-				series.addPoint([ subject.datatime[subject.i-1][0], subject.datatime[subject.i-1][1] ], false);
-				chart.redraw();
+				//pass refreshed array, recalculate axis and refresh plot
+				plot.setData([{data: subject.datatime, label: "Light Value"}]);
+				plot.setupGrid();
+				plot.draw();
 				
 				//add to list
 				$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
