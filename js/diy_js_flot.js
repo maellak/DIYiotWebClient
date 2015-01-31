@@ -134,7 +134,7 @@ diy_tools.prototype.wss_connect = function()  {
 			devicestr = JSON.stringify(device);
 			
 			//initialize plot object
-			var plot = $.plot($("#flot-line-chart"), [{data: [], label: "Light Value"}]);
+			var plot = $.plot($("#container"), [{data: [], label: "Light Value"}]);
 
 			//connect and wait for data
 			conn.subscribe(subject.device, function(topic, data) {
