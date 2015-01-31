@@ -10,11 +10,13 @@ function diy_tools () {
         this.diy_editor_properties= {};	// properties for editor instance
         this.editor_filemode = "";	// filemode    sketch / lib
         
-        //array with measurements, current measurement and unix timestamps (millisecond timestamps)
-        this.datagraph = [];
+        //array with timestamp, array with time in seconds, counter
+        //currenttime, currenty are the last timestamp and last measurement
+        this.datatimestamp = [];
+        this.datatime = [];
         this.i = 0;
-        this.starttime = 0;
         this.currenttime = 0;
+        this.currenty = 0;
 
 }
 // ***GIT*** 
@@ -195,27 +197,22 @@ diy_tools.prototype.wss_connect = function()  {
 				//console.log('device data:"' + topic + '" : ' + data);
 				//$( "#dataDev" ).append( data.data + "<br>" );
 				
-				//---receive data, register starting time, count measurements, pass data to graph---
-				if (subject.starttime == 0){
-					subject.starttime = parseInt(data.when)*1000;
-				}
-				
-				//add measurement in subject.datagraph array
-				//x=timestamp (in milliseconds), y=received value
-				var datagraph = subject.datagraph;
+				//---receive data, count measurements, pass data to arrays---
 				subject.currenttime = parseInt(data.when)*1000;
-				datagraph.push([ subject.currenttime, parseFloat(data.data) ]);
+				subject.currenty = parseFloat(data.data);
+				subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
+				subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
 				subject.i = subject.i + 1;
 				
 				//add new data to the plot
 				var chart = $('#container').highcharts(),
 				    series = chart.series[0];
-				series.addPoint([ subject.currenttime, parseFloat(data.data) ], false);
+				series.addPoint([ subject.datatimestamp[subject.i-1][0], subject.datatimestamp[subject.i-1][1] ], false);
 				chart.redraw();
 				
 				//decode timestamp, add to list
-				var d = new Date(subject.currenttime);
-				$( "#dataDev" ).append( subject.i + ". " + d + ", " + data.data + " value<br>" );
+				var d = new Date(subject.datatimestamp[subject.i-1][0]);
+				$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
 				//---plot code end---
 			});
 		},
