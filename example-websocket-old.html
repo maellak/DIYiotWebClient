@@ -21,10 +21,8 @@ function f(){
 // ***************************************************************
 $LAB.script("js/jquery-2.1.1.js").wait()
         .script("js/autobahn.js").wait()
-    	.script("js/diy_js_highcharts.js").wait() 
+    	.script("js/diy_js_old.js").wait()
     	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
-    	.script("js/plugins/highcharts/highcharts.js").wait() 
-    	.script("js/plugins/highcharts/modules/exporting.js").wait() 
         .wait(function(){
                 // ***************************************************************
                 // *********************** scripts ok  ***************************
@@ -159,12 +157,9 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
                        
                   </div>
                </div>
-               
-               <div id="plotcontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-               
                <div id="devices" class="devices">
                </div>
-               <div id="dataDev" class="dataDev" style="height: 150px; overflow: auto;">
+               <div id="dataDev" class="dataDev">
                </div>
 		  </div>
 </div>

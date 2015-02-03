@@ -9,7 +9,21 @@ function diy_tools () {
         this.diy_editor = {};   	// editor instance
         this.diy_editor_properties= {};	// properties for editor instance
         this.editor_filemode = "";	// filemode    sketch / lib
-
+        
+        
+        //declare plot engine
+        this.plotengine = 'js/flot_engine.js';
+        this.timelinelist = true;
+        
+        //array with timestamp, array with time in seconds, counter
+        //currenttime and currenty are the last timestamp and last measurement
+        //unitofmeasurement declares units (to be filled in runtime)
+        this.datatimestamp = [];
+        this.datatime = [];
+        this.i = 0;
+        this.currenttime = 0;
+        this.currenty = 0;
+        this.unitofmeasurement = "volts";
 
 }
 // ***GIT*** 
@@ -119,16 +133,116 @@ diy_tools.prototype.getToken = function()  {
  */
 diy_tools.prototype.wss_connect = function()  {
     	var subject = this;
-	var conn = new ab.Session(this.wss_url+'?access_token='+this.access_token,
+    	var conn = new ab.Session(this.wss_url+'?access_token='+this.access_token,
 		function() {
 			var device = new Object();
 			device.access_token = subject.access_token;
 			device.name = subject.device;
 			devicestr = JSON.stringify(device);
-			conn.subscribe(subject.device, function(topic, data) {
-				//console.log('device data:"' + topic + '" : ' + data);
-				$( "#dataDev" ).append( data.data + "<br>" );
-			});
+			
+			subject.plotengine = $("[name='plotengineselection']").val();
+			subject.timelinelist = parseInt( $("[name='listformat']").val() );
+			$("[name='deviceselection']").attr('disabled', 'disabled');
+			$("[name='plotengineselection']").attr('disabled', 'disabled');
+			$("[name='listformat']").attr('disabled', 'disabled');
+			//$("#plotoptions").attr('disabled', 'disabled');
+			$("#gobutton").attr('disabled', 'disabled');
+			
+			if (subject.timelinelist == 0)
+			{
+				//$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
+				$("#listheaders").append( "<tr><td>No.</td><td>Time (s)</td><td>Value (" + subject.unitofmeasurement + ")</td></tr>" );
+			}
+			else if (subject.timelinelist == 1)
+			{
+				//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
+				$("#listheaders").append( "<tr><td>No.</td><td>Time Stamp</td><td>Value (" + subject.unitofmeasurement + ")</td></tr>" );
+			}
+			else if (subject.timelinelist == 2)
+			{
+				//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
+				$("#listheaders").append( "<tr><td>No.</td><td>Time Stamp</td><td>Time (s)</td><td>Value (" + subject.unitofmeasurement + ")</td></tr>" );
+			}
+			
+			if (subject.plotengine != "")
+			{
+				$LAB
+				.script(subject.plotengine).wait()
+				.wait(function(){
+					initplot(subject);
+
+					//connect and wait for data
+					conn.subscribe(subject.device, function(topic, data) {
+						//console.log('device data:"' + topic + '" : ' + data);
+						//$( "#dataDev" ).append( data.data + "<br>" );
+				
+						//---receive data, count measurements, pass data to arrays---
+						subject.currenttime = parseInt(data.when)*1000;
+						subject.currenty = Math.round(100*parseFloat(data.data)*5/1023)/100;
+						subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
+						subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
+						subject.i = subject.i + 1;
+				
+						addplotpoint(subject);
+								
+						//add to list
+						if (subject.timelinelist == 0)
+						{
+							//$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
+							$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+						}
+						else if (subject.timelinelist == 1)
+						{
+							var d = new Date(subject.datatimestamp[subject.i-1][0]);
+							//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
+							$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+						}
+						else if (subject.timelinelist == 2)
+						{
+							var d = new Date(subject.datatimestamp[subject.i-1][0]);
+							//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
+							$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+						}
+						//---plot code end---
+					});
+				});
+			}
+			else
+			{
+				$("#plotcontainer").hide();
+				
+				//connect and wait for data
+				conn.subscribe(subject.device, function(topic, data) {
+					//console.log('device data:"' + topic + '" : ' + data);
+					//$( "#dataDev" ).append( data.data + "<br>" );
+			
+					//---receive data, count measurements, pass data to arrays---
+					subject.currenttime = parseInt(data.when)*1000;
+					subject.currenty = Math.round(100*parseFloat(data.data)*5/1023)/100;
+					subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
+					subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
+					subject.i = subject.i + 1;
+							
+					//add to list
+					if (subject.timelinelist == 0)
+					{
+						//$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
+						$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+					}
+					else if (subject.timelinelist == 1)
+					{
+						var d = new Date(subject.datatimestamp[subject.i-1][0]);
+						//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
+						$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+					}
+					else if (subject.timelinelist == 2)
+					{
+						var d = new Date(subject.datatimestamp[subject.i-1][0]);
+						//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
+						$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+					}
+				});
+			}
 		},
 		function() {
 			console.warn('WebSocket connection closed');

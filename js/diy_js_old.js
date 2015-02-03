@@ -9,14 +9,7 @@ function diy_tools () {
         this.diy_editor = {};   	// editor instance
         this.diy_editor_properties= {};	// properties for editor instance
         this.editor_filemode = "";	// filemode    sketch / lib
-        
-        //array with timestamp, array with time in seconds, counter
-        //currenttime, currenty are the last timestamp and last measurement
-        this.datatimestamp = [];
-        this.datatime = [];
-        this.i = 0;
-        this.currenttime = 0;
-        this.currenty = 0;
+
 
 }
 // ***GIT*** 
@@ -132,69 +125,9 @@ diy_tools.prototype.wss_connect = function()  {
 			device.access_token = subject.access_token;
 			device.name = subject.device;
 			devicestr = JSON.stringify(device);
-
-			//initialize plot, select plot options
-			$(function () {
-				$('#plotcontainer').highcharts({
-				  title: {
-						text: 'Light Sensor Mearurements',
-						x: -20 //center
-				  },
-				  subtitle: {
-						text: 'Source: http://arduino.os.cs.teiath.gr',
-						x: -20
-				  },
-				  xAxis: {
-				  		gridLineWidth: 1,
-						title: {
-							text: 'Time (s)',
-						},
-				  },
-				  yAxis: {
-				  		gridLineWidth: 1,
-						title: {
-							text: 'Light (0-1023)'
-						},
-				  },
-				  tooltip: {
-						valueSuffix: ' value'
-				  },
-				  legend: {
-						align: 'right',
-						verticalAlign: 'top',
-						x: -10,
-						y: 50,
-						floating: true
-						},
-				  series: [{
-						name: 'Light value',
-						data: [],
-						animation: false 
-				  }]
-				});
-			});
-
-			//connect and wait for data
 			conn.subscribe(subject.device, function(topic, data) {
 				//console.log('device data:"' + topic + '" : ' + data);
-				//$( "#dataDev" ).append( data.data + "<br>" );
-				
-				//---receive data, count measurements, pass data to arrays---
-				subject.currenttime = parseInt(data.when)*1000;
-				subject.currenty = parseFloat(data.data);
-				subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
-				subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
-				subject.i = subject.i + 1;
-				
-				//add new data to the plot
-				var chart = $('#plotcontainer').highcharts(),
-				    series = chart.series[0];
-				series.addPoint([ subject.datatime[subject.i-1][0], subject.datatime[subject.i-1][1] ], false);
-				chart.redraw();
-				
-				//add to list
-				$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
-				//---plot code end---
+				$( "#dataDev" ).append( data.data + "<br>" );
 			});
 		},
 		function() {

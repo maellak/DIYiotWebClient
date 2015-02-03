@@ -19,11 +19,11 @@ function f(){
 // ***************************************************************
 // *********************** $LAB stuff ****************************
 // ***************************************************************
-$LAB.script("js/jquery-2.1.1.js").wait()
-        .script("js/autobahn.js").wait()
-    	.script("js/diy_js.js").wait()
-    	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
-        .wait(function(){
+		$LAB.script("js/jquery-2.1.1.js").wait()
+		.script("js/autobahn.js").wait()
+		.script("js/diy_js.js").wait() 
+		.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
+		.wait(function(){
                 // ***************************************************************
                 // *********************** scripts ok  ***************************
                 // ***************************************************************
@@ -43,14 +43,16 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 				var promiseDevices = diy_o.getDevices();
 				promiseDevices.success(function (devices) {
 					$.each(devices.result.dev, function(i, item) {
-						$('<div id="diy_'+item.device+'" class="diy_devices">'+item.device+'</div>').appendTo('#devices');
+						//$('<div id="diy_'+item.device+'" class="diy_devices">'+item.device+'</div>').appendTo('#devices');
 						//console.log('Devices:"' + item.device);	
+						$("[name='deviceselection']").append('<option value='+item.device+'>'+item.device+'</option>');
 					});
 				});
 			});
-			$(document).on('click', '.diy_devices', function() {
-				var id = $(this).attr('id');
-				var device=id.substr(4)
+			//$(document).on('click', '.diy_devices', function() {
+			$("#gobutton").on('click', function() {
+				var id = "diy_" + $("[name='deviceselection']").val(); //$(this).attr('id');
+				var device= $("[name='deviceselection']").val(); //id.substr(4)
 				//console.log('Devices:"' + device);	
 				promiseToken.done(function (data) {
 					diy_o.device = device;
@@ -146,22 +148,56 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
         </nav>
 <div id="page-wrapper">
 
-            <div class="container-fluid">
+	<div class="container-fluid">
 
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        <h1 class="page-header">
-                            Devices
-                        </h1>
-                       
-                  </div>
-               </div>
-               <div id="devices" class="devices">
-               </div>
-               <div id="dataDev" class="dataDev">
-               </div>
-		  </div>
+	<!-- Page Heading -->
+	<div class="row">
+		<div class="col-lg-12">
+			<h1 class="page-header">
+				Devices
+			</h1>
+	  </div>
+	</div>
+
+	<!--
+	<div id="devices" class="devices">
+	</div>
+	<br />
+	-->
+	
+	<div id="plotoptions">
+		<form>
+			<select name="deviceselection">
+			</select>
+			<select name="plotengineselection">
+				<option value="">No plot</option>
+				<option value="js/highstock_engine.js">Stock Plot</option>
+				<option value="js/highcharts_engine.js">Plain Plot</option>
+				<option value="js/flot_engine.js">Light Plot</option>
+			</select>
+			<select name="listformat">
+				<option value="0">Time passed table</option>
+				<option value="1">Time stamp table</option>
+				<option value="2">Both</option>
+			</select>
+			<input type="button" value="Show!" id="gobutton">
+		</form>
+	</div>
+	
+	<div id="plotcontainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+	
+	<div id="dataDev" class="dataDev table-responsive" style="height: 180px; overflow: auto;">
+		<table class="table table-hover">
+			<thead id="listheaders" style="font-weight: bold;">
+			</thead>
+			<tbody id="listtable">
+			</tbody>
+		</table>
+	</div>
+	
+	</div>
+			  
+			  
 </div>
 </div>
 </body?
