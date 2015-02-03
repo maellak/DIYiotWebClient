@@ -169,6 +169,8 @@ diy_tools.prototype.wss_connect = function()  {
 				$LAB
 				.script(subject.plotengine).wait()
 				.wait(function(){
+					$("#dataDev").css("height", "180px"); 
+					$("#dataDev").css("overflow", "auto"); 
 					initplot(subject);
 
 					//connect and wait for data
@@ -210,6 +212,8 @@ diy_tools.prototype.wss_connect = function()  {
 			else
 			{
 				$("#plotcontainer").hide();
+				$("#dataDev").css("height", "auto"); 
+				$("#dataDev").css("overflow", "visible"); 
 				
 				//connect and wait for data
 				conn.subscribe(subject.device, function(topic, data) {
