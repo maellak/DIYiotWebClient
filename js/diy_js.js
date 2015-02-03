@@ -169,8 +169,15 @@ diy_tools.prototype.wss_connect = function()  {
 				$LAB
 				.script(subject.plotengine).wait()
 				.wait(function(){
-					$("#dataDev").css("height", "180px"); 
-					$("#dataDev").css("overflow", "auto"); 
+					if (subject.timelinelist == 3)
+					{
+						$("#dataDev").hide();
+					}
+					else
+					{ 
+						$("#dataDev").css("height", "180px"); 
+						$("#dataDev").css("overflow", "auto"); 
+					}
 					initplot(subject);
 
 					//connect and wait for data
