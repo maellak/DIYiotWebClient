@@ -17,13 +17,14 @@ function diy_tools () {
         
         //array with timestamp, array with time in seconds, counter
         //currenttime and currenty are the last timestamp and last measurement
-        //unitofmeasurement declares units (to be filled in runtime)
+        //unitofmeasurement declares units, plottitle declares plot title/description (to be realized)
         this.datatimestamp = [];
         this.datatime = [];
         this.i = 0;
         this.currenttime = 0;
         this.currenty = 0;
         this.unitofmeasurement = "volts";
+        this.plottitle = 'Light Sensor Measurements';
 
 }
 // ***GIT*** 

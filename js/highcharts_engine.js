@@ -18,12 +18,8 @@ function initplot(subject){
 
 		$('#plotcontainer').highcharts({
 		  title: {
-				text: 'Light Sensor Measurements',
+				text: subject.plottitle,
 				x: -20 //center
-		  },
-		  subtitle: {
-				text: 'Source: http://arduino.os.cs.teiath.gr',
-				x: -20
 		  },
 		  xAxis: {
 		  		gridLineWidth: 1,
