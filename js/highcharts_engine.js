@@ -18,7 +18,7 @@ function initplot(subject){
 
 		$('#plotcontainer').highcharts({
 		  title: {
-				text: 'Light Sensor Mearurements',
+				text: 'Light Sensor Measurements',
 				x: -20 //center
 		  },
 		  subtitle: {

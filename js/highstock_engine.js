@@ -45,7 +45,7 @@ function initplot(subject){
 			},
 
 			title : {
-				text : 'Light Sensor Mearurements'
+				text : 'Light Sensor Measurements'
 			},
 			xAxis: {
 				gridLineWidth: 1,
