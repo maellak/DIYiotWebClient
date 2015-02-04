@@ -12,7 +12,7 @@ function diy_tools () {
         
         
         //declare plot engine
-        this.plotengine = 'js/flot_engine.js';
+        this.plotengine = '';
         this.timelinelist = true;
         
         //array with timestamp, array with time in seconds, counter
@@ -182,37 +182,7 @@ diy_tools.prototype.wss_connect = function()  {
 
 					//connect and wait for data
 					conn.subscribe(subject.device, function(topic, data) {
-						//console.log('device data:"' + topic + '" : ' + data);
-						//$( "#dataDev" ).append( data.data + "<br>" );
-				
-						//---receive data, count measurements, pass data to arrays---
-						subject.currenttime = parseInt(data.when)*1000;
-						subject.currenty = Math.round(100*parseFloat(data.data)*5/1023)/100;
-						subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
-						subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
-						subject.i = subject.i + 1;
-				
-						addplotpoint(subject);
-								
-						//add to list
-						if (subject.timelinelist == 0)
-						{
-							//$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
-							$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
-						}
-						else if (subject.timelinelist == 1)
-						{
-							var d = new Date(subject.datatimestamp[subject.i-1][0]);
-							//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
-							$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
-						}
-						else if (subject.timelinelist == 2)
-						{
-							var d = new Date(subject.datatimestamp[subject.i-1][0]);
-							//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
-							$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
-						}
-						//---plot code end---
+						addmeasurement(subject, data);
 					});
 				});
 			}
@@ -224,34 +194,7 @@ diy_tools.prototype.wss_connect = function()  {
 				
 				//connect and wait for data
 				conn.subscribe(subject.device, function(topic, data) {
-					//console.log('device data:"' + topic + '" : ' + data);
-					//$( "#dataDev" ).append( data.data + "<br>" );
-			
-					//---receive data, count measurements, pass data to arrays---
-					subject.currenttime = parseInt(data.when)*1000;
-					subject.currenty = Math.round(100*parseFloat(data.data)*5/1023)/100;
-					subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
-					subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
-					subject.i = subject.i + 1;
-							
-					//add to list
-					if (subject.timelinelist == 0)
-					{
-						//$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
-						$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
-					}
-					else if (subject.timelinelist == 1)
-					{
-						var d = new Date(subject.datatimestamp[subject.i-1][0]);
-						//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
-						$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
-					}
-					else if (subject.timelinelist == 2)
-					{
-						var d = new Date(subject.datatimestamp[subject.i-1][0]);
-						//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
-						$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
-					}
+					addmeasurement(subject, data);
 				});
 			}
 		},
@@ -262,6 +205,35 @@ diy_tools.prototype.wss_connect = function()  {
 			'skipSubprotocolCheck': true
 		}
 	);
+}
+
+function addmeasurement(subject, data){
+	//---receive data, count measurements, pass data to arrays---
+	subject.currenttime = parseInt(data.when)*1000;
+	subject.currenty = Math.round(100*parseFloat(data.data)*5/1023)/100;
+	subject.datatimestamp.push([ subject.currenttime, subject.currenty ]);
+	subject.datatime.push([ (subject.currenttime-subject.datatimestamp[0][0])/1000, subject.currenty ]);
+	subject.i = subject.i + 1;
+
+	if (subject.plotengine != ""){
+		addplotpoint(subject);
+	}
+		
+	//add to list
+	if (subject.timelinelist == 0)
+	{
+		$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+	}
+	else if (subject.timelinelist == 1)
+	{
+		var d = new Date(subject.datatimestamp[subject.i-1][0]);
+		$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+	}
+	else if (subject.timelinelist == 2)
+	{
+		var d = new Date(subject.datatimestamp[subject.i-1][0]);
+		$("#listtable").append( "<tr><td>" + subject.i + "</td><td>" + d + "</td><td>" + subject.datatime[subject.i-1][0] + " s</td><td>" + subject.datatime[subject.i-1][1] + " " + subject.unitofmeasurement + " </td></tr>" );
+	}
 }
 
 /*
