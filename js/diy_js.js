@@ -2,8 +2,8 @@ function diy_tools () {
 	var diy__hostname = "your server";
      	this.https_url = "https://"+diy__hostname;
      	this.wss_url = "wss://"+diy__hostname;
-     	this.client_id = "CLIENT_ID11";
-     	this.client_secret = "CLIENT_SECRET11";
+     	this.client_id = "user3";
+     	this.client_secret = "Uuser3!";
      	this.device = "kittensCategory";
 }
 
