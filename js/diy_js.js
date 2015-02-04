@@ -145,22 +145,18 @@ diy_tools.prototype.wss_connect = function()  {
 			$("[name='deviceselection']").attr('disabled', 'disabled');
 			$("[name='plotengineselection']").attr('disabled', 'disabled');
 			$("[name='listformat']").attr('disabled', 'disabled');
-			//$("#plotoptions").attr('disabled', 'disabled');
 			$("#gobutton").attr('disabled', 'disabled');
 			
 			if (subject.timelinelist == 0)
 			{
-				//$( "#dataDev" ).append( subject.i + ". " + subject.datatime[subject.i-1][0] + " s, " + subject.datatime[subject.i-1][1] + " value<br>" );
 				$("#listheaders").append( "<tr><td>No.</td><td>Time (s)</td><td>Value (" + subject.unitofmeasurement + ")</td></tr>" );
 			}
 			else if (subject.timelinelist == 1)
 			{
-				//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
 				$("#listheaders").append( "<tr><td>No.</td><td>Time Stamp</td><td>Value (" + subject.unitofmeasurement + ")</td></tr>" );
 			}
 			else if (subject.timelinelist == 2)
 			{
-				//$( "#dataDev" ).append( subject.i + ". " + d + ", " + subject.datatimestamp[subject.i-1][1] + " value<br>" );
 				$("#listheaders").append( "<tr><td>No.</td><td>Time Stamp</td><td>Time (s)</td><td>Value (" + subject.unitofmeasurement + ")</td></tr>" );
 			}
 			
