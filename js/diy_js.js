@@ -2,8 +2,8 @@ function diy_tools () {
         var diy__hostname = "arduino.os.cs.teiath.gr";
         this.https_url = "https://"+diy__hostname;
         this.wss_url = "wss://"+diy__hostname;
-        this.client_id = "user";
-        this.client_secret = "user";
+        this.client_id = "user5";
+        this.client_secret = "Uuser5!";
         this.device = "";
         this.diy_editor = {};   	// editor instance
         this.diy_editor_properties= {};	// properties for editor instance
@@ -80,8 +80,8 @@ diy_tools.prototype.getToken = function()  {
         });
     }
     // If no credentials are saved show a modal dialog
-    var savedUsername = localStorage.getItem("username");
-    var savedPassword = localStorage.getItem("password");
+    var savedUsername = sessionStorage.getItem("username");
+    var savedPassword = sessionStorage.getItem("password");
     if(savedUsername == null || savedPassword == null) {
         $("<div><div><input id='username' type='text' placeholder='Username' /></div><div><input id='password' type='password' placeholder='Password' /></div></div>").dialog({
             dialogClass: "no-close",
@@ -96,8 +96,8 @@ diy_tools.prototype.getToken = function()  {
                             // Save them in storage
                             if(typeof data.access_token != 'undefined') {
                                 $this.dialog( "close" );
-                                localStorage.setItem("username", subject.client_id);
-                                localStorage.setItem("password", subject.client_secret);
+                                sessionStorage.setItem("username", subject.client_id);
+                                sessionStorage.setItem("password", subject.client_secret);
                                 dfd.resolve(data);
                             } else {
                                 alert('Invalid credentials');
@@ -116,14 +116,20 @@ diy_tools.prototype.getToken = function()  {
             } else {
                 subject.client_id = null;
                 subject.client_secret = null;
-                localStorage.removeItem("username");
-                localStorage.removeItem("password");
+                sessionStorage.removeItem("username");
+                sessionStorage.removeItem("password");
                 var newdfd = subject.getToken();
                 newdfd.done(function(data) { dfd.resolve(data); });
             }
         });
     }
     return dfd;
+}
+
+diy_tools.prototype.logout = function() {
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("password");
+        window.location.reload();
 }
 
 /*

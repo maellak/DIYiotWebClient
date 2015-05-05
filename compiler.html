@@ -129,6 +129,11 @@ $LAB.script("js/jquery-2.1.1.js").wait()
         	$(function(){   
 			$( "#compile" ).button();
 			var promiseToken = diy_o.getToken();
+                        $(document).on('click', '#logout-button', function(e) {
+                                diy_o.logout();
+                                e.preventDefault();
+                                return false;
+                        });
 			$(document).on('click', '#compile', function() {
 			// get token for the session
 			promiseToken.done(function (data) {
@@ -183,7 +188,7 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 
 				var promiseCompile = diy_o.compile();
 				// run  compiler
-				promiseCompile.success(function (data) {
+				promiseCompile.done(function (data) {
 						console.log('compile:"' + data);       
 				});
 			});
@@ -335,10 +340,10 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 
 			   $( "#devices" ).selectmenu();
 			  // get devices for compile
-			promiseToken.success(function (data) {
+			promiseToken.done(function (data) {
 				diy_o.access_token = data.access_token;
 				var promiseDevices = diy_o.getDevices();
-				promiseDevices.success(function (devices) {
+				promiseDevices.done(function (devices) {
 					$.each(devices.result.dev, function(i, item) {
 						$("#devices").append('<option value="'+ item.device +'">'+ item.device +'</option>');
 					});
@@ -385,6 +390,9 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
 		 <a href="https://fkdfjkdjfkjdkfsd.help.jpg">
 			 <img src="help" alt="help" class="ui-corner-all">
 		 </a>
+                 <a id="logout-button" href="https://fkdfjkdjfkjdkfsd.help.jpg">
+                         Logout
+                 </a>
 	<div id="tabs">
 		<ul>
 		</ul>
