@@ -22,6 +22,8 @@
 
     <!-- Custom Fonts -->
     <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.css">
+<link rel="stylesheet" href="js/plugins/jquery-ui-1.11.2.custom/jquery-ui.theme.css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -35,54 +37,50 @@
 (function(g,b,d){var c=b.head||b.getElementsByTagName("head"),D="readyState",E="onreadystatechange",F="DOMContentLoaded",G="addEventListener",H=setTimeout;
 function f(){
 
-	 
 // ***************************************************************
 // *********************** $LAB stuff ****************************
 // ***************************************************************
-$LAB.script("js/jquery-2.1.1.js").wait() 
-        .script("js/autobahn.js").wait() 
-    	.script("js/diy_js.js").wait() 
+$LAB.script("js/jquery-2.1.1.js").wait()
+        .script("js/autobahn.js").wait()
+    	.script("js/diy_js.js").wait()
     	.script("js/plugins/jquery-ui-1.11.2.custom/jquery-ui.js").wait() 
-	.script("js/plugins/CodeMirror/lib/codemirror.js").wait()
-	.script("js/plugins/CodeMirror/mode/clike/clike.js").wait()
-	.script("js/plugins/CodeMirror/addon/edit/matchbrackets.js").wait()
-	.script("js/plugins/CodeMirror/addon/comment/comment.js").wait()
-	.script("js/plugins/CodeMirror/addon/search/search.js").wait()
-	.script("js/plugins/CodeMirror/addon/search/searchcursor.js").wait()
-	.script("js/plugins/CodeMirror/addon/dialog/dialog.js").wait()
-	.script("js/plugins/CodeMirror/addon/scroll/annotatescrollbar.js").wait()
-	.script("js/plugins/CodeMirror/addon/search/matchesonscrollbar.js").wait()
-	.script("js/plugins/CodeMirror/addon/display/fullscreen.js").wait()
-	.script("js/plugins/CodeMirror/addon/hint/anyword-hint.js").wait()
-	.script("js/plugins/CodeMirror/addon/hint/show-hint.js").wait()
-
-	.script("js/plugins/CodeMirror/addon/lint/lint.js").wait()
-	.script("js/plugins/CodeMirror/mode/css/css.js").wait()
-	.script("js/plugins/CodeMirror/addon/lint/javascript-lint.js").wait()
-	.script("js/plugins/CodeMirror/mode/javascript/javascript.js").wait()
-	.script("js/plugins/CodeMirror/addon/lint/json-lint.js").wait() 
-	.script("js/plugins/CodeMirror/addon/lint/css-lint.js").wait()
-	.script("js/plugins/CodeMirror/addon/selection/active-line.js").wait()
-	//.script("http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js").wait() 
-	.script("js/plugins/CodeMirror/addon/lint/jshint.js").wait()
-	//.script("https://rawgithub.com/zaach/jsonlint/79b553fb65c192add9066da64043458981b3972b/lib/jsonlint.js").wait() 
-	.script("js/plugins/CodeMirror/addon/lint/jsonlint.js").wait()
-	.script("js/plugins/CodeMirror/addon/lint/csslint.js").wait() 
-	//.script("https://rawgithub.com/stubbornella/csslint/master/release/csslint.js").wait() 
-
         .wait(function(){
                 // ***************************************************************
                 // *********************** scripts ok  ***************************
                 // ***************************************************************
          	AUTOBAHN_DEBUG = true;
  		ab.debug(true);
-var diy_o =  new diy_tools();
-$(function(){   
-	var promiseToken = diy_o.getToken();
-});
-});
-});
+ 		var diy_o =  new diy_tools();
+        	$(function(){   
+			/* 
+			 * ******************************************
+			 * get token and connect to  wss 
+			 * connect is using fro data read from device 
+			 * ******************************************
+			*/ 
+			var promiseToken = diy_o.getToken();
+			promiseToken.done(function (data) {
+				diy_o.access_token = data.access_token;
+				window.location = 'example-websocket.html';
+			});
+			$(document).on('click', '#logout-button', function(e) {
+					diy_o.logout();
+					e.preventDefault();
+					return false;
+			});
+  		});
+                // ***************************************************************
+                // *********************** scripts ok  ***************************
+                // ***************************************************************
+        });
+// ***************************************************************
+// *********************** $LAB stuff  ***************************
+// ***************************************************************
 
+}
+H(function(){if("item"in c){if(!c[0]){H(arguments.callee,25);return}c=c[0]}var a=b.createElement("script"),e=false;a.onload=a[E]=function(){if((a[D]&&a[D]!=="complete"&&a[D]!=="loaded")||e){return false}a.onload=a[E]=null;e=true;f()};
+a.src="js/LAB.js";
+c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=function(){b.removeEventListener(F,d,false);b[D]="complete"},false)}})(this,document);
 </script>
 </head>
 
@@ -170,7 +168,7 @@ $(function(){
 
             </div>
             <!-- /.container-fluid -->
-  <form class="form-horizontal" role="form" method="post" action="example-websocket.html">
+  <!--<form class="form-horizontal" role="form" method="post" action="example-websocket.html">
   <div class="form-group">
    <label for="client_id" class="col-sm-2 control-label">Username</label>
    <div class="col-sm-10">
@@ -187,7 +185,7 @@ $(function(){
       <button type="submit" class="btn btn-default" onclick='diy_tools()'>Log in</button>
     </div>
   </div>
-</form>
+</form>-->
 </div>
    </div>
    <div id="devices" class="devices">
