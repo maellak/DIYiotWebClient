@@ -61,6 +61,11 @@ $LAB.script("js/jquery-2.1.1.js").wait()
 					diy_o.wss_connect();
 				});
 			});
+			$(document).on('click', '#logout-button', function(e) {
+					diy_o.logout();
+					e.preventDefault();
+					return false;
+			});
   		});
                 // ***************************************************************
                 // *********************** scripts ok  ***************************
@@ -195,6 +200,10 @@ c.insertBefore(a,c.firstChild)},0);if(b[D]==null&&b[G]){b[D]="loading";b[G](F,d=
 			</tbody>
 		</table>
 	</div>
+	
+                 <a id="logout-button" href="https://fkdfjkdjfkjdkfsd.help.jpg">
+                         Logout
+                 </a>
 	
 	</div>
 			  
